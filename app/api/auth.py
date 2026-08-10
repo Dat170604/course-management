@@ -31,18 +31,14 @@ def register(
     user: UserCreate,
     db: Session = Depends(get_db)
 ):
-    
     hashed_password = hash_password(
         user.password
     )
-    
-
     new_user = User(
         username=user.username,
         email=user.email,
         password=hashed_password
     )
-
     try:
         db.add(new_user)
         db.commit()
@@ -52,16 +48,13 @@ def register(
         raise HTTPException(
             status_code=400,
             detail="Email đã tồn tại")
-
-
     return new_user
 
 @router.post("/login")
 def login(
     request: LoginRequest,
     db: Session = Depends(get_db)
-):  
-
+):
     return login_user(
         request.email,
         request.password,

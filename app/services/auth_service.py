@@ -1,5 +1,7 @@
 from sqlalchemy.orm import Session
 
+from fastapi import HTTPException
+
 from app.models.user import User
 
 from app.core.security import (
@@ -17,18 +19,23 @@ def login_user(
     ).first()
 
     if not user:
-        return None
+        raise HTTPException(
+            status_code=401,
+            detail="Email hoặc mật khẩu không đúng"
+        )
 
     if not verify_password(
         password,
         user.password
     ):
-        return None
+        raise HTTPException(
+            status_code=401,
+            detail="Email hoặc mật khẩu không đúng"
+        )
 
     access_token = create_access_token(
         data={"sub": user.email}
     )
-
     return {
         "access_token": access_token,
         "token_type": "bearer"
