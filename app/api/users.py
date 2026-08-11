@@ -7,7 +7,7 @@ router = APIRouter(
 
 @router.get("/")
 def get_users():
-
     return {
-        "message":"Danh sách user"
+       "message":"Danh sách user"
     }
+

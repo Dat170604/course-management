@@ -8,7 +8,6 @@ from app.models.enums import UserRole
 
 from app.database import Base
 
-
 class User(Base):
     __tablename__ = "users"
 
@@ -20,7 +19,5 @@ class User(Base):
     create_at = Column(DateTime(timezone=True), server_default=func.now())
     update_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     phone = Column(String(20))
-    courses = relationship(
-    "Course",
-    back_populates="teacher"
-    )
+    courses = relationship("Course",back_populates="teacher")
+    enrollments = relationship("Enrollment",back_populates="student")
