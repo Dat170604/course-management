@@ -9,6 +9,12 @@ def create_course(
     current_user,
     db
 ):
+    if current_user.role != UserRole.TEACHER:
+        raise HTTPException(
+            status_code=403,
+            detail="Only teachers can create courses"
+        )
+
     new_course = Course(
         title=course.title,
         description=course.description,
@@ -100,3 +106,13 @@ def delete_course(
     return {
         "message": "Course deleted successfully"
     }
+
+def get_my_courses(
+    current_user,
+    db
+):
+    courses = db.query(Course).filter(
+        Course.teacher_id == current_user.id
+    ).all()
+
+    return courses

@@ -20,3 +20,8 @@ class LoginRequest(BaseModel):
     email: EmailStr
     password: str
     
+class TeacherCreate(BaseModel):
+    username: str
+    email: EmailStr
+    password: str
+

@@ -1,6 +1,9 @@
 from fastapi import HTTPException
 
+from sqlalchemy.orm import joinedload
+
 from app.models.enrollment import Enrollment
+from app.models.user import User
 from app.models.course import Course
 from app.models.enums import UserRole
 
@@ -51,6 +54,44 @@ def get_my_enrollments(
     current_user,
     db
 ):
-    return db.query(Enrollment).filter(
+    return db.query(Enrollment).options(
+        joinedload(Enrollment.course)
+    ).filter(
         Enrollment.student_id == current_user.id
     ).all()
+
+def get_course_students(
+    course_id,
+    current_user,
+    db
+):
+    course = db.query(Course).filter(
+        Course.id == course_id
+    ).first()
+
+    if course is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Course not found"
+        )
+
+    if current_user.role != UserRole.TEACHER:
+        raise HTTPException(
+            status_code=403,
+            detail="Only teachers can view students"
+        )
+
+    if course.teacher_id != current_user.id:
+        raise HTTPException(
+            status_code=403,
+            detail="You cannot view students of this course"
+        )
+
+    students = db.query(User).join(
+        Enrollment,
+        Enrollment.student_id == User.id
+    ).filter(
+        Enrollment.course_id == course_id
+    ).all()
+
+    return students

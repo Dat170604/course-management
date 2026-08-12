@@ -7,7 +7,7 @@ from app.dependencies import get_db, get_current_user
 
 from app.models.user import User
 
-from app.schemas.enrollment import EnrollmentResponse
+from app.schemas.enrollment import EnrollmentResponse, EnrollmentCourseResponse
 
 from app.services.enrollment_service import enroll_course, get_my_enrollments
 
@@ -18,7 +18,7 @@ router = APIRouter(
 
 @router.get(
     "/me",
-    response_model=list[EnrollmentResponse]
+    response_model= list[EnrollmentCourseResponse]
 )
 def get_my_enrollments_api(
     db: Session = Depends(get_db),
