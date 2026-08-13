@@ -1,5 +1,4 @@
-from fastapi import APIRouter, HTTPException
-from fastapi import Depends
+from fastapi import APIRouter, HTTPException, Depends, Query
 
 from sqlalchemy.orm import Session
 
@@ -8,11 +7,11 @@ from app.dependencies import get_db, get_current_user, require_teacher
 from app.models.user import User
 from app.models.enums import UserRole
 
-from app.schemas.course import CourseCreate, CourseResponse, CourseUpdate
+from app.schemas.course import CourseCreate, CourseResponse, CourseUpdate, TeacherCourseResponse, CourseListResponse
 from app.schemas.user import UserResponse
 
 from app.services.enrollment_service import get_course_students
-from app.services.course_service import create_course, get_courses, get_course_by_id, update_course, delete_course, get_my_courses
+from app.services.course_service import create_course, get_courses, get_course_by_id, update_course, delete_course, get_my_courses, get_teacher_dashboard
 
 router = APIRouter(
     prefix="/courses",
@@ -21,12 +20,19 @@ router = APIRouter(
 
 @router.get(
     "",
-    response_model=list[CourseResponse]
+    response_model=CourseListResponse
 )
 def get_all_courses(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
+    search: str = Query(None),
+    min_price: float = Query(None, ge=0),
+    max_price: float = Query(None, ge=0),
+    teacher_id: int = Query(None, ge=1),
+    sort: str = Query(None)
 ):
-    return get_courses(db)
+    return get_courses(db, page, limit, search, min_price, max_price, teacher_id, sort)
 
 @router.post(
     "",
@@ -47,7 +53,7 @@ def create(
     "/my",
     response_model=list[CourseResponse]
 )
-def get_my_courses_api(
+def my_courses(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -57,6 +63,19 @@ def get_my_courses_api(
             detail="Only teachers can view their courses"
         )
     return get_my_courses(
+        current_user,
+        db
+    )
+
+@router.get(
+    "/dashboard",
+    response_model = list[TeacherCourseResponse]
+)
+def teacher_dashboard(
+    current_user: User = Depends(require_teacher),
+    db: Session = Depends(get_db)
+):
+    return get_teacher_dashboard(
         current_user,
         db
     )

@@ -1,6 +1,9 @@
 from fastapi import HTTPException
 
+from sqlalchemy import func
+
 from app.models.course import Course
+from app.models.enrollment import Enrollment
 from app.models.enums import UserRole
 
 
@@ -26,8 +29,67 @@ def create_course(
     db.refresh(new_course)
     return new_course
 
-def get_courses(db):
-    return db.query(Course).all()
+def get_courses(
+    db,
+    page,
+    limit,
+    search,
+    min_price,
+    max_price,
+    teacher_id,
+    sort
+):
+    query = db.query(Course)
+
+    if search:
+        query = query.filter(
+            Course.title.ilike(f"%{search}%")
+        )
+
+    if min_price is not None:
+        query = query.filter(
+            Course.price >= min_price
+    )
+    
+    if max_price is not None:
+        query = query.filter(
+            Course.price <= max_price
+        )
+
+    if teacher_id is not None:
+        query = query.filter(
+            Course.teacher_id == teacher_id
+        )
+
+    if sort == "price":
+        query = query.order_by(
+            Course.price.asc()
+        )
+    elif sort == "-price":
+        query = query.order_by(
+            Course.price.desc()
+    )
+    else:
+        query = query.order_by(
+            Course.id.asc()
+        )
+        
+    total = query.count()
+
+    skip = (page - 1) * limit
+
+    courses = query.offset(
+        skip
+    ).limit(
+        limit
+    ).all()
+
+    return {
+        "total": total,
+        "page": page,
+        "limit": limit,
+        "courses": courses
+    }
 
 def get_course_by_id(
     course_id,
@@ -116,3 +178,44 @@ def get_my_courses(
     ).all()
 
     return courses
+
+def get_teacher_dashboard(
+    current_user,
+    db
+):
+    if current_user.role != UserRole.TEACHER:
+        raise HTTPException(
+            status_code=403,
+            detail="Only teachers can access dashboard"
+        )
+
+    courses = (
+        db.query(
+            Course,
+            func.count(Enrollment.id).label("student_count")
+        )
+        .outerjoin(
+            Enrollment,
+            Enrollment.course_id == Course.id
+        )
+        .filter(
+            Course.teacher_id == current_user.id
+        )
+        .group_by(
+            Course.id
+        ).all()
+    )
+
+    result = []
+
+    for course, student_count in courses:
+        result.append(
+            {
+                "id": course.id,
+                "title": course.title,
+                "description": course.description,
+                "price": course.price,
+                "student_count": student_count
+            }
+        )
+    return result

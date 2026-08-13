@@ -9,7 +9,7 @@ from app.models.user import User
 
 from app.schemas.enrollment import EnrollmentResponse, EnrollmentCourseResponse
 
-from app.services.enrollment_service import enroll_course, get_my_enrollments
+from app.services.enrollment_service import enroll_course, get_my_enrollments, cancel_enrollment
 
 router = APIRouter(
     prefix="/enrollments",
@@ -44,3 +44,16 @@ def enroll(
         db
     )
 
+@router.delete(
+    "/{course_id}"
+)
+def cancel_enrollment_api(
+    course_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    return cancel_enrollment(
+        course_id,
+        current_user,
+        db
+    )

@@ -95,3 +95,32 @@ def get_course_students(
     ).all()
 
     return students
+
+def cancel_enrollment(
+    course_id,
+    current_user,
+    db
+):
+    if current_user.role != UserRole.STUDENT:
+        raise HTTPException(
+            status_code=403,
+            detail="Only students can cancel enrollment"
+        )
+
+    enrollment = db.query(Enrollment).filter(
+        Enrollment.student_id == current_user.id,
+        Enrollment.course_id == course_id
+    ).first()
+
+    if enrollment is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Enrollment not found"
+        )
+
+    db.delete(enrollment)
+    db.commit()
+
+    return {
+        "message": "Enrollment cancelled successfully"
+    }
