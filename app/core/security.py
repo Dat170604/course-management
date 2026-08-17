@@ -25,7 +25,6 @@ oauth2_scheme = OAuth2PasswordBearer(
 def hash_password(password: str):
     return pwd_context.hash(password)
 
-
 def verify_password(
     plain_password,
     hashed_password
@@ -37,21 +36,9 @@ def verify_password(
 
 def create_access_token(data: dict):
     to_encode = data.copy()
-
-    expire = datetime.utcnow() + timedelta(
-        minutes=ACCESS_TOKEN_EXPIRE_MINUTES
-    )
-
-    to_encode.update(
-        {"exp": expire}
-    )
-
-    token = jwt.encode(
-        to_encode,
-        SECRET_KEY,
-        algorithm=ALGORITHM
-    )
-
+    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"exp": expire})
+    token = jwt.encode(to_encode,SECRET_KEY,algorithm=ALGORITHM)
     return token
 
 def decode_access_token(token: str):
