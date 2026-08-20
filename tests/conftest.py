@@ -8,6 +8,11 @@ from app.main import app
 from app.database import Base
 from app.dependencies import get_db
 
+from app.models.user import User, UserRole
+from app.models.course import Course
+
+from app.core.security import hash_password
+
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
@@ -27,9 +32,10 @@ TestingSessionLocal = sessionmaker(
 )
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(autouse=True)
 def setup_database():
-
+    
+    Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
 
     yield
@@ -61,16 +67,82 @@ def client(db):
 
     app.dependency_overrides.clear()
 
+
 @pytest.fixture
-def auth_headers(client):
+def teacher(db):
+    user = User(
+        username = "teacher_test",
+        email = "teacher_test@gmail.com",
+        password = hash_password("string"),
+        role = UserRole.TEACHER
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
+
+@pytest.fixture
+def student(db):
+    user = User(
+        username = "student_test",
+        email = "student_test@gmail.com",
+        password = hash_password("string"),
+        role = UserRole.STUDENT
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
+
+@pytest.fixture
+def teacher_auth_headers(client, teacher):
     response = client.post(
         "/auth/login",
         json={
-            "email": "user@example.com",
+            "email": teacher.email,
             "password": "string"
         }
     )
-    token = response.json()["access_token"]
+
+    assert response.status_code == 200, response.json()
+    data = response.json()
+    assert "access_token" in data, data
+
     return {
-        "Authorization": f"Bearer {token}"
+        "Authorization": f"Bearer {data['access_token']}"
     }
+
+
+@pytest.fixture
+def student_auth_headers(client, student):
+    response = client.post(
+        "/auth/login",
+        json={
+            "email": student.email,
+            "password": "string"
+        }
+    )
+
+    assert response.status_code == 200, response.json()
+    data = response.json()
+    assert "access_token" in data, data
+
+    return {
+        "Authorization": f"Bearer {data['access_token']}"
+    }
+
+
+@pytest.fixture
+def course(db, teacher):
+    course = Course(
+        title="Python FastAPI",
+        description="Learn FastAPI",
+        price=100000,
+        teacher_id=teacher.id
+    )
+
+    db.add(course)
+    db.commit()
+    db.refresh(course)
+
+    return course

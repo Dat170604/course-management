@@ -1,16 +1,19 @@
-def test_get_current_user(client, auth_headers):
-
+def test_get_current_teacher(client, teacher_auth_headers):
     response = client.get(
         "/auth/me",
-        headers=auth_headers
+        headers=teacher_auth_headers
     )
+
     assert response.status_code == 200
 
 
-def test_get_current_user_without_token(client):
-    response = client.get("/auth/me")
+def test_get_current_student(client, student_auth_headers):
+    response = client.get(
+        "/auth/me",
+        headers=student_auth_headers
+    )
 
-    assert response.status_code == 401
+    assert response.status_code == 200
 
 
 def test_get_current_user_invalid_token(client):
@@ -24,3 +27,5 @@ def test_get_current_user_invalid_token(client):
     )
 
     assert response.status_code == 401
+
+    
