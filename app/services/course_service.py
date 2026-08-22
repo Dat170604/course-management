@@ -199,7 +199,7 @@ def get_teacher_dashboard(
             Enrollment.course_id == Course.id
         )
         .filter(
-            Course.teacher_id == current_user.id
+            Course.teacher_id == current_user.id    
         )
         .group_by(
             Course.id

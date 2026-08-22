@@ -1,8 +1,14 @@
 
-def test_get_courses(client):
+def test_get_all_courses(client, course):
+
     response = client.get("/courses/")
 
     assert response.status_code == 200
+
+    data = response.json()
+
+    assert isinstance(data, list)
+    assert len(data) >= 1
 
 def test_get_course(client, course):
     response = client.get(
