@@ -24,10 +24,17 @@ def create_course(
         price=course.price,
         teacher_id=current_user.id
     )
-    db.add(new_course)
-    db.commit()
-    db.refresh(new_course)
-    return new_course
+    try:
+        db.add(new_course)
+        db.commit()
+        db.refresh(new_course)
+        return new_course
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=400,
+            detail="Failed to create course"
+        )
 
 def get_courses(
     db,

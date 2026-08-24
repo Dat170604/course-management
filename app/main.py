@@ -10,6 +10,9 @@ from app.api import auth, users, courses, enrollments, dashboard
 
 from app.middleware.logging import logging_middleware
 
+from app.exception.course import CourseNotFoundException
+from app.exception.handler import course_not_found_handler
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -21,6 +24,11 @@ app.include_router(enrollments.router)
 app.include_router(dashboard.router)
 
 app.middleware("http")(logging_middleware)
+
+app.add_exception_handler(
+    CourseNotFoundException,
+    course_not_found_handler
+)
 
 @app.get("/")
 def root():
