@@ -25,10 +25,7 @@ app.include_router(dashboard.router)
 
 app.middleware("http")(logging_middleware)
 
-app.add_exception_handler(
-    CourseNotFoundException,
-    course_not_found_handler
-)
+app.add_exception_handler(CourseNotFoundException, course_not_found_handler)
 
 @app.get("/")
 def root():

@@ -2,9 +2,17 @@ from fastapi import HTTPException
 
 from sqlalchemy import func
 
+import json
+
+from app.redis import redis_client
+
 from app.models.course import Course
 from app.models.enrollment import Enrollment
 from app.models.enums import UserRole
+
+from app.schemas.course import CourseResponse 
+
+from app.exception.course import CourseNotFoundException
 
 
 def create_course(
@@ -24,12 +32,24 @@ def create_course(
         price=course.price,
         teacher_id=current_user.id
     )
+
     try:
         db.add(new_course)
         db.commit()
         db.refresh(new_course)
+
+        cache_key = f"course:{new_course.id}"
+
+        course_dict = CourseResponse.model_validate(new_course).model_dump()
+
+        redis_client.set(
+            cache_key,
+            json.dumps(course_dict),
+            ex=300
+        )
+
         return new_course
-    except Exception as e:
+    except:
         db.rollback()
         raise HTTPException(
             status_code=400,
@@ -46,8 +66,24 @@ def get_courses(
     teacher_id,
     sort
 ):
-    query = db.query(Course)
+    cache_key = (
+        f"courses:"
+        f"page={page}:"
+        f"limit={limit}:"
+        f"search={search}:"
+        f"min_price={min_price}:"
+        f"max_price={max_price}:"
+        f"teacher_id={teacher_id}:"
+        f"sort={sort}"
+    )
 
+    cached_data = redis_client.get(cache_key)
+
+    if cached_data:
+        return json.loads(cached_data)
+    
+    query = db.query(Course)
+    
     if search:
         query = query.filter(
             Course.title.ilike(f"%{search}%")
@@ -91,27 +127,63 @@ def get_courses(
         limit
     ).all()
 
-    return {
+    result = {
         "total": total,
         "page": page,
         "limit": limit,
-        "courses": courses
+        "courses": [
+            {
+                "id": course.id,
+                "title": course.title,
+                "description": course.description,
+                "price": course.price,
+                "teacher_id": course.teacher_id
+            }
+            for course in courses
+        ]
     }
+
+    redis_client.set(
+        cache_key,
+        json.dumps(result),
+        ex=300
+    )
+
+    return result
 
 def get_course_by_id(
     course_id,
     db
 ):
+    cache_key = f"course:{course_id}"
+
+    cache_data = redis_client.get(cache_key)
+
+    if cache_data:
+        return json.loads(cache_data)
+    
     course = db.query(Course).filter(
         Course.id == course_id
     ).first()
 
     if course is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Course not found"
-        )
-    return course
+        raise CourseNotFoundException()
+
+    result = {
+        "id": course.id,
+        "title": course.title,
+        "description": course.description,
+        "price": course.price,
+        "teacher_id": course.teacher_id
+    }
+
+    redis_client.set(
+        cache_key,
+        json.dumps(result),
+        ex=300
+    )
+    
+    return result
 
 def update_course(
     course_id,
@@ -122,11 +194,9 @@ def update_course(
     course = db.query(Course).filter(
         Course.id == course_id
     ).first()
+
     if course is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Course not found"
-        )
+        raise CourseNotFoundException()
 
     if (current_user.role != UserRole.ADMIN and course.teacher_id != current_user.id):
         raise HTTPException(
@@ -138,14 +208,13 @@ def update_course(
         exclude_unset=True
     )
     for key, value in data.items():
-        setattr(
-            course,
-            key,
-            value
-        )
+        setattr(course, key, value)
 
     db.commit()
     db.refresh(course)
+
+    cache_key = f"course:{course_id}"
+    redis_client.delete(cache_key)
 
     return course
 
@@ -171,6 +240,9 @@ def delete_course(
 
     db.delete(course)
     db.commit()
+
+    cache_key = f"course:{course_id}"
+    redis_client.delete(cache_key)
 
     return {
         "message": "Course deleted successfully"
