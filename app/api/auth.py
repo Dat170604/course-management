@@ -8,11 +8,11 @@ from app.database import SessionLocal
 from app.models import user
 from app.models.user import User
 
-from app.schemas.user import LoginRequest, UserCreate, UserResponse
+from app.schemas.user import LoginRequest, UserCreate, UserResponse, RefreshTokenRequest, AccessTokenResponse, TokenResponse
 
 from app.core.security import hash_password
 
-from app.services.auth_service import login_user
+from app.services.auth_service import login_user, refresh_access_token, logout
 
 from app.dependencies import get_current_user
 
@@ -50,9 +50,12 @@ def register(
             detail="Email đã tồn tại")
     return new_user
 
-@router.post("/login")
+@router.post(
+    "/login",
+    response_model = TokenResponse)
 def login(
     request: LoginRequest,
+    
     db: Session = Depends(get_db)
 ):
     return login_user(
@@ -61,7 +64,13 @@ def login(
         db
     )
 
-@router.post("/token")
+@router.post("/logout")
+def logout_api(data: RefreshTokenRequest):
+    return logout(data.refresh_token)
+
+@router.post(
+        "/token",
+        response_model = TokenResponse)
 def token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
@@ -72,6 +81,15 @@ def token(
         db
     )
 
+@router.post(
+    "/refresh",
+    response_model = AccessTokenResponse
+)
+def refresh_token(
+    data: RefreshTokenRequest
+):
+    return refresh_access_token(data.refresh_token)
+
 @router.get(
     "/me",
     response_model=UserResponse
@@ -80,3 +98,6 @@ def get_me(
     current_user: User = Depends(get_current_user)
 ):
     return current_user
+
+
+    

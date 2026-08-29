@@ -11,7 +11,7 @@ from app.models.enums import UserRole
 
 from app.core.security import (
     oauth2_scheme,
-    decode_access_token
+    decode_token
 )
 
 
@@ -27,13 +27,27 @@ def get_current_user(
     db: Session = Depends(get_db)
 ):
     try:
-        payload = decode_access_token(token)
+        payload = decode_token(token)
     except JWTError:
         raise HTTPException(
             status_code=401,
             detail="Invalid token"
         )
+
+    token_type = payload.get("type")
+    if token_type != "access":
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid token type"
+        )
+    
     email = payload.get("sub")
+    if email is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid token"
+        )
+
     user = db.query(User).filter(
         User.email == email
     ).first()

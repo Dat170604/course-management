@@ -2,6 +2,7 @@ from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import ForeignKey
 from sqlalchemy import DateTime
+from sqlalchemy import UniqueConstraint
 
 from sqlalchemy.orm import relationship
 
@@ -18,3 +19,11 @@ class Enrollment(Base):
     created_at = Column(DateTime(timezone=True),server_default=func.now())
     student = relationship("User",back_populates="enrollments")
     course = relationship("Course",back_populates="enrollments")
+
+    __table_agrs__ = (
+        UniqueConstraint(
+            "student_id",
+            "course_id",
+            name="uq_student_course"
+        )
+    )
