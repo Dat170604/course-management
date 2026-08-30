@@ -10,8 +10,10 @@ from app.dependencies import get_db
 
 from app.models.user import User, UserRole
 from app.models.course import Course
+from app.models.enrollment import Enrollment
 
 from app.core.security import hash_password
+from app.redis import redis_client
 
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
@@ -38,8 +40,12 @@ def setup_database():
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
 
+    redis_client.flushdb()
+
     yield
 
+    redis_client.flushdb()
+    
     Base.metadata.drop_all(bind=engine)
 
 
@@ -67,13 +73,12 @@ def client(db):
 
     app.dependency_overrides.clear()
 
-
 @pytest.fixture
 def teacher(db):
     user = User(
         username = "teacher_test",
         email = "teacher_test@gmail.com",
-        password = hash_password("string"),
+        password = hash_password("teacher"),
         role = UserRole.TEACHER
     )
     db.add(user)
@@ -86,7 +91,7 @@ def student(db):
     user = User(
         username = "student_test",
         email = "student_test@gmail.com",
-        password = hash_password("string"),
+        password = hash_password("student"),
         role = UserRole.STUDENT
     )
     db.add(user)
@@ -100,16 +105,20 @@ def teacher_auth_headers(client, teacher):
         "/auth/login",
         json={
             "email": teacher.email,
-            "password": "string"
+            "password": "teacher"
         }
     )
 
     assert response.status_code == 200, response.json()
+
     data = response.json()
+
     assert "access_token" in data, data
+    assert "refresh_token" in data, data
 
     return {
-        "Authorization": f"Bearer {data['access_token']}"
+        "Authorization": f"Bearer {data['access_token']}",
+        "refresh_token": data['refresh_token']
     }
 
 
@@ -119,16 +128,20 @@ def student_auth_headers(client, student):
         "/auth/login",
         json={
             "email": student.email,
-            "password": "string"
+            "password": "student"
         }
     )
 
     assert response.status_code == 200, response.json()
+
     data = response.json()
+
     assert "access_token" in data, data
+    assert "refresh_token" in data, data
 
     return {
-        "Authorization": f"Bearer {data['access_token']}"
+        "Authorization": f"Bearer {data['access_token']}",
+        "refresh_token": data['refresh_token']
     }
 
 
