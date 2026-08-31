@@ -6,15 +6,26 @@ import os
 
 load_dotenv()
 
-DATABASE_URL = (
-    f"mysql+pymysql://{os.getenv('DB_USER')}:"
-    f"{os.getenv('DB_PASSWORD')}@"
-    f"{os.getenv('DB_HOST')}:"
-    f"{os.getenv('DB_PORT')}/"
-    f"{os.getenv('DB_NAME')}"
-)
+if os.getenv("TESTING") == "true":
 
-engine = create_engine(DATABASE_URL)
+    DATABASE_URL = "sqlite:///./test.db"
+
+else:
+
+    DATABASE_URL = (
+        f"mysql+pymysql://{os.getenv('DB_USER')}:"
+        f"{os.getenv('DB_PASSWORD')}@"
+        f"{os.getenv('DB_HOST')}:"
+        f"{os.getenv('DB_PORT')}/"
+        f"{os.getenv('DB_NAME')}"
+    )
+
+engine = create_engine(
+    DATABASE_URL,
+    connect_args={
+        "check_same_thread": False
+    } if DATABASE_URL.startswith("sqlite") else {}
+    )
 
 SessionLocal = sessionmaker(
     autocommit=False,
