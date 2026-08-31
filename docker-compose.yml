@@ -23,8 +23,8 @@ services:
     container_name: course_mysql
 
     environment:
-      MYSQL_ROOT_PASSWORD: dat170604
-      MYSQL_DATABASE: course_management
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD }
+      MYSQL_DATABASE: ${DB_NAME}
 
     ports:
       - "3307:3306"
