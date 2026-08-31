@@ -21,7 +21,7 @@ jobs:
       SECRET_KEY: "dat170604"
       ALGORITHM: "HS256"
       ACCESS_TOKEN_EXPIRE_MINUTES: "30"
-      FRESH_TOKEN_EXPIRE_DAY: "7"
+      REFRESH_TOKEN_EXPIRE_DAY: "7"
 
     services:
       redis:
