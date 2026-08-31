@@ -1,9 +1,9 @@
 from app.exception.handler import AppException
 
 
-class CourseNotFoundException(AppException):
+class UserNotFoundException(AppException):
     def __init__(self):
         super().__init__(
             status_code=404,
-            message= "Course not found"
+            content= "User not found"
         )

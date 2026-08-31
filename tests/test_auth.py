@@ -64,3 +64,34 @@ def test_access_token_cannot_refresh(client, student):
     )
 
     assert response.status_code == 401
+
+def test_refresh_after_logout(client, student):
+    login = client.post(
+        "/auth/login",
+        json={
+            "email": student.email,
+            "password": "student"
+        }
+    )
+
+    refresh_token = (
+        login.json()["refresh_token"]
+    )
+
+    logout = client.post(
+        "/auth/logout",
+        json={
+            "refresh_token": refresh_token
+        }
+    )
+
+    assert logout.status_code == 200
+
+    response = client.post(
+        "/auth/refresh",
+        json={
+            "refresh_token": refresh_token
+        }
+    )
+
+    assert response.status_code == 401
