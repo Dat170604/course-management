@@ -40,6 +40,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Check environment
+        run: |
+          echo "TESTING=$TESTING"
+          echo "REDIS_HOST=$REDIS_HOST"
+
       - name: Run tests
         run: |
           pytest
