@@ -85,7 +85,7 @@ def test_account_login(client, student):
 def test_account_register(client, student):
     response = client.post(
         "/auth/register",
-        json={"email": "newstudent@gmail.com", "password": "newstudent"},
+        json={"username": "newstudent", "email": "newstudent@gmail.com", "password": "newstudent"},
     )
 
     assert response.status_code == 200
@@ -93,7 +93,7 @@ def test_account_register(client, student):
     assert "refresh_token" in response.json()
 
     response = client.post(
-        "/auth/register", json={"email": student.email, "password": "student"}
+        "/auth/register", json={"username": "existingstudent", "email": student.email, "password": "student"}
     )
 
     assert response.status_code == 400
