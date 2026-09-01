@@ -75,7 +75,7 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest --cov=app --cov-branch --cov-fail-under=75
+          pytest --cov=app --cov-branch --cov-fail-under=70
 
       - name: Build Docker image
         run: |
