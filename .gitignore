@@ -1,0 +1,41 @@
+# Virtual Environment
+venv/
+.venv/
+
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+
+# Pytest
+.pytest_cache/
+
+# Coverage
+.coverage
+htmlcov/
+*.coverage
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Database
+*.db
+*.sqlite3
+*.sqlite
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Ruff
+.ruff_cache/
+
+# Docker
+*.log
