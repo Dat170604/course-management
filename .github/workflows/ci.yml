@@ -92,4 +92,4 @@ jobs:
       - name: Push Docker image
         if: github.ref == 'refs/heads/main'
         run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/course-management:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/course-management:latest 

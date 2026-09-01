@@ -38,7 +38,7 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
     return login_user(request.email, request.password, db)
 
 
-@router.post("/logout")
+@router.post("/logout")  
 def logout_api(data: RefreshTokenRequest):
     return logout(data.refresh_token)
 
