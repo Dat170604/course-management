@@ -95,3 +95,23 @@ def test_refresh_after_logout(client, student):
     )
 
     assert response.status_code == 401
+
+def test_account_login(client, student):
+    response = client.post(
+            "/auth/login",
+            json={
+                "email": "student@gmail.com",
+                "password": "student"
+            }
+        )
+
+    assert response.status_code == 401
+
+    response = client.post(
+        "/auth/login",
+        json={
+            "email": student.email,
+            "password": "wrong_password"
+        }
+    )
+    assert response.status_code == 401

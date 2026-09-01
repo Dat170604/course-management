@@ -54,14 +54,9 @@ def create(
     response_model=list[CourseResponse]
 )
 def my_courses(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_teacher),
     db: Session = Depends(get_db)
 ):
-    if current_user.role != UserRole.TEACHER:
-        raise HTTPException(
-            status_code=403,
-            detail="Only teachers can view their courses"
-        )
     return get_my_courses(
         current_user,
         db

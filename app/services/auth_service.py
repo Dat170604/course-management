@@ -30,6 +30,10 @@ def login_user(
             detail="Too many login attempts. Try again later."
         )
 
+    attempts = redis_client.incr(cache_key)
+    if attempts == 1:
+        redis_client.expire(cache_key, 60)
+
     user = db.query(User).filter(
         User.email == email
     ).first()
@@ -44,10 +48,6 @@ def login_user(
         password,
         user.password
     ):
-        attempts = redis_client.incr(cache_key)
-        if attempts == 1:
-            redis_client.expire(cache_key, 60)
-        
         raise HTTPException(
             status_code=401,
             detail="Email hoặc mật khẩu không đúng"
