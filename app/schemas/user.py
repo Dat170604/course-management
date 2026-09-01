@@ -1,11 +1,13 @@
-from pydantic import BaseModel, EmailStr, ConfigDict
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 from app.models.enums import UserRole
+
 
 class TokenResponse(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str
+
 
 class RefreshTokenRequest(BaseModel):
     refresh_token: str
@@ -15,10 +17,12 @@ class AccessTokenResponse(BaseModel):
     access_token: str
     token_type: str
 
+
 class UserCreate(BaseModel):
     username: str
     email: EmailStr
     password: str
+
 
 class UserResponse(BaseModel):
     id: int
@@ -27,12 +31,13 @@ class UserResponse(BaseModel):
     role: UserRole
     model_config = ConfigDict(from_attributes=True)
 
+
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
-    
+
+
 class TeacherCreate(BaseModel):
     username: str
     email: EmailStr
     password: str
-

@@ -1,12 +1,10 @@
-from sqlalchemy import Column, Integer, String
-from sqlalchemy import Enum
-from sqlalchemy import DateTime
-from sqlalchemy.sql import func
+from sqlalchemy import Column, DateTime, Enum, Integer, String
 from sqlalchemy.orm import relationship
-
-from app.models.enums import UserRole
+from sqlalchemy.sql import func
 
 from app.database import Base
+from app.models.enums import UserRole
+
 
 class User(Base):
     __tablename__ = "users"
@@ -17,7 +15,9 @@ class User(Base):
     password = Column(String(255), nullable=False)
     role = Column(Enum(UserRole), nullable=False, default=UserRole.STUDENT)
     create_at = Column(DateTime(timezone=True), server_default=func.now())
-    update_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    update_at = Column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
     phone = Column(String(20))
-    courses = relationship("Course",back_populates="teacher")
-    enrollments = relationship("Enrollment",back_populates="student")
+    courses = relationship("Course", back_populates="teacher")
+    enrollments = relationship("Enrollment", back_populates="student")

@@ -1,4 +1,3 @@
-
 def test_get_all_courses(client):
 
     response = client.get("/courses/")
@@ -14,10 +13,9 @@ def test_get_all_courses(client):
 
     assert isinstance(data["courses"], list)
 
+
 def test_get_course(client, course):
-    response = client.get(
-        f"/courses/{course.id}"
-    )
+    response = client.get(f"/courses/{course.id}")
 
     assert response.status_code == 200, response.json()
 
@@ -26,6 +24,7 @@ def test_get_course(client, course):
     assert data["id"] == course.id
     assert data["title"] == course.title
 
+
 def test_create_course(client, teacher_auth_headers):
     response = client.post(
         "/courses/",
@@ -33,8 +32,8 @@ def test_create_course(client, teacher_auth_headers):
         json={
             "title": "Test Course",
             "description": "This is a test course.",
-            "price": 100
-        }
+            "price": 100,
+        },
     )
 
     assert response.status_code == 200, response.json()

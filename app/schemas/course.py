@@ -6,6 +6,7 @@ class CourseCreate(BaseModel):
     description: str
     price: float
 
+
 class CourseResponse(BaseModel):
     id: int
     title: str
@@ -14,10 +15,12 @@ class CourseResponse(BaseModel):
     teacher_id: int
     model_config = ConfigDict(from_attributes=True)
 
+
 class CourseUpdate(BaseModel):
     title: str | None = None
     description: str | None = None
     price: float | None = None
+
 
 class TeacherCourseResponse(BaseModel):
     id: int
@@ -25,6 +28,7 @@ class TeacherCourseResponse(BaseModel):
     description: str
     price: float
     student_count: int
+
 
 class CourseListResponse(BaseModel):
     total: int

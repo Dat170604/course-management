@@ -1,22 +1,14 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import time
 
-from app.database import Base, engine
-
-from app.models.user import User
-
-from app.api import auth, users, courses, enrollments, dashboard
-
+from app.api import auth, courses, dashboard, enrollments, users
+from app.exception.auth import InvalidTokenException
+from app.exception.course import CourseNotFoundException
+from app.exception.handler import app_exception_handler
+from app.exception.user import UserNotFoundException
 from app.middleware.logging import logging_middleware
 
-from app.exception.course import CourseNotFoundException
-from app.exception.auth import InvalidTokenException
-from app.exception.user import UserNotFoundException
-
-from app.exception.handler import app_exception_handler
-
-#Base.metadata.create_all(bind=engine)
+# Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 

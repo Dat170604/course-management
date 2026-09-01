@@ -3,10 +3,7 @@ import time
 from fastapi import Request
 
 
-async def logging_middleware(
-    request: Request,
-    call_next
-):
+async def logging_middleware(request: Request, call_next):
     start_time = time.time()
 
     print(f"Request: {request.method} {request.url.path}")
