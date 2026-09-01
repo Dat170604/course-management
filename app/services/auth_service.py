@@ -34,7 +34,6 @@ def login_user(email: str, password: str, db: Session):
     if not verify_password(password, user.password):
         raise HTTPException(status_code=401, detail="Email hoặc mật khẩu không đúng")
 
-    try:
         access_token = create_access_token(data={"sub": user.email})
 
         refresh_token = create_refresh_token(data={"sub": user.email})
@@ -46,9 +45,6 @@ def login_user(email: str, password: str, db: Session):
             "refresh_token": refresh_token,
             "token_type": "bearer",
         }
-    except Exception:
-        raise
-
 
 def refresh_access_token(refresh_token: str):
 

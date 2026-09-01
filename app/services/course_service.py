@@ -2,6 +2,7 @@ import json
 
 from fastapi import HTTPException
 from sqlalchemy import func
+from sqlalchemy.exc import SQLAlchemyError
 
 from app.exception.course import CourseNotFoundException
 from app.models.course import Course
@@ -34,7 +35,7 @@ def create_course(course, current_user, db):
         redis_client.set(cache_key, json.dumps(course_dict), ex=300)
 
         return new_course
-    except:
+    except SQLAlchemyError:
         db.rollback()
         raise HTTPException(status_code=400, detail="Failed to create course")
 
