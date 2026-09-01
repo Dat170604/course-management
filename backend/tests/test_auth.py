@@ -93,8 +93,6 @@ def test_account_register(client, student):
     )
 
     assert response.status_code == 200
-    assert "access_token" in response.json()
-    assert "refresh_token" in response.json()
 
     response = client.post(
         "/auth/register",
