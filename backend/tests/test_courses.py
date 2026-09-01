@@ -24,7 +24,7 @@ def test_get_course(client, course):
     assert data["id"] == course.id
     assert data["title"] == course.title
 
-    respose = client.get("/courses/9999")
+    response = client.get("/courses/9999")
 
     assert response.status_code == 404
 
