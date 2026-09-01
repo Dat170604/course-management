@@ -63,9 +63,9 @@ def test_refresh_after_logout(client, student):
 
 def test_account_login(client, student):
     response = client.post(
-            "/auth/login", json={"email": student.email, "password": "student"}
-        )
-    
+        "/auth/login", json={"email": student.email, "password": "student"}
+    )
+
     assert response.status_code == 200
     assert "access_token" in response.json()
     assert "refresh_token" in response.json()
@@ -81,9 +81,11 @@ def test_account_login(client, student):
     )
     assert response.status_code == 401
 
+
 def test_account_register(client, student):
     response = client.post(
-        "/auth/register", json={"email": "newstudent@gmail.com", "password": "newstudent"}
+        "/auth/register",
+        json={"email": "newstudent@gmail.com", "password": "newstudent"},
     )
 
     assert response.status_code == 200
@@ -92,6 +94,6 @@ def test_account_register(client, student):
 
     response = client.post(
         "/auth/register", json={"email": student.email, "password": "student"}
-    )    
+    )
 
     assert response.status_code == 400

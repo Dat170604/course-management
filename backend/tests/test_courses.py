@@ -46,6 +46,7 @@ def test_create_course(client, teacher_auth_headers):
     assert data["description"] == "This is a test course."
     assert data["price"] == 100
 
+
 def test_create_course_unauthorized(client):
     response = client.post(
         "/courses/",
@@ -57,6 +58,7 @@ def test_create_course_unauthorized(client):
     )
 
     assert response.status_code == 401, response.json()
+
 
 def test_create_course_forbidden(client, student_auth_headers):
     response = client.post(
@@ -70,6 +72,7 @@ def test_create_course_forbidden(client, student_auth_headers):
     )
 
     assert response.status_code == 403, response.json()
+
 
 def test_update_course(client, teacher_auth_headers, course):
     response = client.put(
@@ -88,6 +91,7 @@ def test_update_course(client, teacher_auth_headers, course):
     assert data["description"] == "This is an updated test course."
     assert data["price"] == 150
 
+
 def test_update_course_unauthorized(client, course):
     response = client.put(
         f"/courses/{course.id}",
@@ -99,6 +103,7 @@ def test_update_course_unauthorized(client, course):
     )
 
     assert response.status_code == 401, response.json()
+
 
 def test_update_course_forbidden(client, student_auth_headers, course):
     response = client.put(
@@ -112,4 +117,3 @@ def test_update_course_forbidden(client, student_auth_headers, course):
     )
 
     assert response.status_code == 403, response.json()
-
