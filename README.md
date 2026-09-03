@@ -42,7 +42,7 @@ cd course-management
 Tạo file `.env` và cấu hình các thông tin cần thiết:
 
 ```env
-DB_HOST=db
+DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=your_password
