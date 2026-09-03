@@ -42,17 +42,25 @@ cd course-management
 Tạo file `.env` và cấu hình các thông tin cần thiết:
 
 ```env
-DB_HOST=mysql
+DB_HOST=db
 DB_PORT=3306
-DB_USER=...
-DB_PASSWORD=...
-DB_NAME=...
+DB_USER=root
+DB_PASSWORD=your_password
+DB_NAME=course_management
+
+SECRET_KEY=your_secret_key
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+REFRESH_TOKEN_EXPIRE_DAY=7
+
+REDIS_HOST=redis
+REDIS_PORT=6379
 ```
 
 ### 3. Chạy bằng Docker Compose
 
 ```bash
-docker compose up --build
+docker compose up --d
 ```
 
 Sau khi khởi động, API có thể được truy cập thông qua:
