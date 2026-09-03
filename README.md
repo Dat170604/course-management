@@ -60,7 +60,7 @@ REDIS_PORT=6379
 ### 3. Chạy bằng Docker Compose
 
 ```bash
-docker compose up --d
+docker compose up -d
 ```
 
 Sau khi khởi động, API có thể được truy cập thông qua:
