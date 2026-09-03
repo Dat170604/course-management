@@ -1,7 +1,7 @@
 services:
 
   backend:
-    build: .
+    image: dat170604/course-management:latest
     container_name: course_backend
 
     env_file:
@@ -9,7 +9,9 @@ services:
 
     environment:
       DB_HOST: db
+      DB_PORT: 3306
       REDIS_HOST: redis
+      REDIS_PORT: 6379
 
     ports:
       - "8000:8000"
@@ -17,6 +19,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
 
   db:
     image: mysql:8.0
@@ -33,7 +37,7 @@ services:
       - mysql_data:/var/lib/mysql
 
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -pdat170604"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$${MYSQL_ROOT_PASSWORD}"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -41,6 +45,7 @@ services:
 
   redis:
     image: redis:7
+    container_name: course_redis
     ports:
       - "6379:6379"
 
