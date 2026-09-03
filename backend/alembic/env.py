@@ -22,6 +22,7 @@ if config.config_file_name is not None:
 target_metadata = Base.metadata
 
 
+
 def get_database_url():
     return (
         f"mysql+pymysql://{os.getenv('DB_USER')}:"
