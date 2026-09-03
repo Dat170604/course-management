@@ -76,6 +76,10 @@ jobs:
           ruff check .
           ruff format --check .
 
+      - name: Run migrations
+        working-directory: backend
+        run: alembic upgrade head
+
       - name: Run tests
         working-directory: backend
         run: |
