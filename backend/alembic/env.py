@@ -21,6 +21,7 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
 
+
 def get_database_url():
     return (
         f"mysql+pymysql://{os.getenv('DB_USER')}:"
@@ -29,6 +30,8 @@ def get_database_url():
         f"{os.getenv('DB_PORT')}/"
         f"{os.getenv('DB_NAME')}"
     )
+
+
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
@@ -66,10 +69,7 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    configuration = config.get_section(
-    config.config_ini_section,
-    {}
-    )
+    configuration = config.get_section(config.config_ini_section,{})
 
     configuration["sqlalchemy.url"] = get_database_url()
 
