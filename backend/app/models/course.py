@@ -29,4 +29,4 @@ class Course(Base):
     teacher = relationship("User", back_populates="courses")
     enrollments = relationship("Enrollment", back_populates="course")
 
-    __table_agrs__ = CheckConstraint("price >= 0", name="check_course_price")
+    __table_args__ = (CheckConstraint("price >= 0", name="check_course_price"),)
