@@ -1,4 +1,3 @@
-# app/scripts/seed_admin.py
 import os
 
 from app.core.security import hash_password
