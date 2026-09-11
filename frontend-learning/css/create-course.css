@@ -1,0 +1,126 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 50px 20px;
+}
+
+h1 {
+    margin-bottom: 30px;
+    font-size: 32px;
+}
+
+.course-form {
+    width: 100%;
+    max-width: 500px;
+
+    background-color: white;
+
+    padding: 30px;
+
+    border-radius: 10px;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.group-form {
+    display: flex;
+    flex-direction: column;
+
+    margin-bottom: 20px;
+}
+
+.group-form label {
+    margin-bottom: 8px;
+
+    font-weight: bold;
+}
+
+.group-form input {
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #ccc;
+    border-radius: 6px;
+
+    font-size: 16px;
+
+    outline: none;
+}
+
+.group-form input:focus {
+    border-color: #333;
+}
+
+button {
+    padding: 12px 20px;
+
+    border: none;
+    border-radius: 6px;
+
+    font-size: 16px;
+
+    cursor: pointer;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+button[type="submit"] {
+    background-color: #222;
+    color: white;
+}
+
+button[type="submit"]:hover {
+    background-color: #444;
+}
+
+#cancel-button {
+    background-color: #ddd;
+    color: #222;
+
+    margin-left: 10px;
+}
+
+#cancel-button:hover {
+    background-color: #ccc;
+}
+
+#message {
+    margin-top: 20px;
+
+    font-size: 16px;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 30px 15px;
+    }
+
+    .course-form {
+        padding: 20px;
+    }
+
+    button {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    #cancel-button {
+        margin-left: 0;
+    }
+}

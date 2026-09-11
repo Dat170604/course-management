@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Course</title>
+    <link rel="stylesheet" href="css/create-course.css">
+</head>
+<body>
+    <h1>Create Course</h1>
+    <form class="course-form">
+        <div class="group-form">
+            <label for="title">Title</label>
+            <input
+                type="text"
+                id="title"
+                name="title"
+                required
+                placeholder="Enter title">
+        </div>
+
+        <div class="group-form">
+            <label for="description">Description</label>
+            <input
+                type="text"
+                id="description"
+                name="description"
+                required
+                placeholder="Enter description">
+        </div>
+
+        <div class="group-form">
+            <label for="price">Price</label>
+            <input
+                type="number"
+                id="price"
+                name="price"
+                required
+                min="0"
+                placeholder="Enter price">
+        </div>
+        <button type="submit">Create</button>
+        <button type="button" id="cancel-button">Cancel</button>
+    </form>
+    <p id="message"></p>
+    <script src="js/api.js"></script>
+    <script src="js/create-course.js"></script>
+</body>
+</html>

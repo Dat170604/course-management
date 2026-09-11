@@ -7,7 +7,7 @@
         content="width=device-width, initial-scale=1.0"
     >
     <title>Course Management</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="css/index.css">
 </head>
 
 <body>
@@ -20,15 +20,15 @@
 
             <div class="nav-links">
                 <a href="index.html">Home</a>
-                <a href="course.html">Courses</a>
-                <a href="login.html">Login</a>
-                <a href="register.html">Register</a>
+                <a href="login.html" id="login-link">Login</a>
+                <a href="register.html" id="register-link">Register</a>
             </div>
 
         </nav>
     </header>
     
     <main>
+        </section>
         <section class="hero">
             <h2>Learn Anything</h2>
             <p>Start your learning journey today.</p>
@@ -36,7 +36,11 @@
         </section>
 
         <section class="courses">
-            <h2>Popular Courses</h2>
+            <div class="courses-header">
+                <h2 id="course-header">Popular Courses</h2>
+                <button class="load-courses">Load</button>
+            </div>
+            
             <div class="course-list">
                 <article class="course-card">
                     <h3>Python</h3>
@@ -60,45 +64,20 @@
                     <span class="badge">
                         New
                     </span>
-                    <h2>FastAPI</h2>
-                    <p>Learn FastAPI and REST API.</p>
+                    <h3>HTML</h3>
+                    <p>Learn HTML.</p>
                     <button>View Course</button>
                 </article>
 
-                <article class="course-card">
-                    <span class="badge">
-                        New
-                    </span>
-                    <h3>Docker</h3>
-                    <p>Learn Docker.</p>
-                    <button>View Course</button>
-                </article>
-                
             </div>
         </section>
         
-        <div class="dashboard">
-            <header class="header">
-                Header
-            </header>
-            <aside class="sidebar">
-                Sidebar
-            </aside>
-            <main class="main">
-                Main Content
-            </main>
-            <section class="session">
-                Session
-            </section>
-        </div>
-
-        <input type="text" placeholder="Enter your name">
-
     </main>
 
     <footer>  
         <p>© 2026 Course Management</p>  
     </footer>
-    <script src="index.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/index.js"></script>
 </body>
 </html>
