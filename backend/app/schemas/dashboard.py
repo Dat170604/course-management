@@ -2,6 +2,7 @@ from pydantic import BaseModel
 
 from app.models import Course
 from app.schemas.user import UserResponse
+from app.schemas.course import CourseResponse
 
 
 class AdminDashboardResponse(BaseModel):
@@ -17,4 +18,4 @@ class AdminGetUserResponse(BaseModel):
 
 
 class AdminGetCourseResponse(BaseModel):
-    courses: list[Course]
+    courses: list[CourseResponse]

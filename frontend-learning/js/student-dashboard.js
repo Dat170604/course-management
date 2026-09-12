@@ -152,18 +152,9 @@ async function loadMyCourses() {
             `;
 
             courseList.appendChild(card);
-
-            const buttons = document.querySelectorAll("#unenroll-button");
-
-            buttons.forEach(button => {
-                button.addEventListener("click", () => {
-                    const courseId = Number(button.dataset.id);
-                    unenrollCourse(courseId, button);
-                });
-            });
-
-            
         });
+
+        addUnerollCourseEvent();
 
     } catch (error) {
         console.error(error);
@@ -172,6 +163,16 @@ async function loadMyCourses() {
 }
 
 my_courses.addEventListener("click", loadMyCourses)
+
+async function addUnerollCourseEvent() {
+    const buttons = document.querySelectorAll("#unenroll-button");
+        buttons.forEach(button => {
+            button.addEventListener("click", () => {
+                const courseId = Number(button.dataset.id);
+                unenrollCourse(courseId, button);
+        });
+    });
+}
 
 async function unenrollCourse(courseId, button) {
     try {
