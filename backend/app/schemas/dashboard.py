@@ -1,8 +1,7 @@
 from pydantic import BaseModel
 
-from app.models import Course
-from app.schemas.user import UserResponse
 from app.schemas.course import CourseResponse
+from app.schemas.user import UserResponse
 
 
 class AdminDashboardResponse(BaseModel):
