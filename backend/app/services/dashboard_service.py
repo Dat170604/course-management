@@ -1,5 +1,3 @@
-from fastapi import HTTPException
-
 from app.models.course import Course
 from app.models.enrollment import Enrollment
 from app.models.enums import UserRole
@@ -7,9 +5,6 @@ from app.models.user import User
 
 
 def get_admin_dashboard(current_user, db):
-
-    if current_user.role != UserRole.ADMIN:
-        raise HTTPException(status_code=403, detail="Only admins can access dashboard")
 
     total_students = db.query(User).filter(User.role == UserRole.STUDENT).count()
 
@@ -25,3 +20,18 @@ def get_admin_dashboard(current_user, db):
         "total_courses": total_courses,
         "total_enrollments": total_enrollments,
     }
+
+
+def get_user(current_user, db):
+
+    students = db.query(User).filter(User.role == UserRole.STUDENT)
+
+    teachers = db.query(User).filter(User.role == UserRole.TEACHER)
+
+    return {"students": students, "teachers": teachers}
+
+
+def get_course(current_user, db):
+
+    courses = db.query(Course)
+    return courses

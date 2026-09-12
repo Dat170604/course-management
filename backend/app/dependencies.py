@@ -39,9 +39,18 @@ def get_current_user(
 
 
 def require_teacher(current_user: User = Depends(get_current_user)):
-    if current_user.role not in [UserRole.TEACHER, UserRole.ADMIN]:
+    if current_user.role != UserRole.TEACHER:
         raise HTTPException(
             status_code=403, detail="Only teachers can perform this action"
+        )
+
+    return current_user
+
+
+def require_admin(current_user: User = Depends(get_current_user)):
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(
+            status_code=403, detail="Only admins can perform this action"
         )
 
     return current_user
