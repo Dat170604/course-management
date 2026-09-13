@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="css/admin-dashboard.css">
+</head>
+<body>
+    <header>
+        <a href="admin-dashboard.html" id="logo">Admin Dashboard</a>
+        <div id="tools">
+            <button id="logout">Logout</button>
+        </div>
+    </header>
+
+    <main>
+        <h2>Student</h2>
+        <div id="student-list">
+            <div class="user-header">
+                <span>STT</span>
+                <span>Name</span>
+                <span>Email</span>
+                <span>Role</span>
+            </div>
+        </div>
+
+        <h2>Teacher</h2>
+        <div id="teacher-list">
+            <div class="user-header">
+                <span>STT</span>
+                <span>Name</span>
+                <span>Email</span>
+                <span>Role</span>
+            </div>
+        </div>
+
+        <h2>Course</h2>
+        <div id="course-list">
+
+        </div>
+
+        <p id="message"></p>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/admin-dashboard.js"></script>
+</body>
+</html>

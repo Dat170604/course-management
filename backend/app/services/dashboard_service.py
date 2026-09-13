@@ -34,4 +34,4 @@ def get_user(current_user, db):
 def get_course(current_user, db):
 
     courses = db.query(Course)
-    return courses
+    return {"courses": courses}
