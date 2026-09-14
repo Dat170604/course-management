@@ -14,7 +14,3 @@ class AdminDashboardResponse(BaseModel):
 class AdminGetUserResponse(BaseModel):
     students: list[UserResponse]
     teachers: list[UserResponse]
-
-
-class AdminGetCourseResponse(BaseModel):
-    courses: list[CourseResponse]

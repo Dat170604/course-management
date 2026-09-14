@@ -11,6 +11,8 @@ from app.models.enums import UserRole
 from app.redis import redis_client
 from app.schemas.course import CourseResponse
 
+import math
+
 
 def create_course(course, current_user, db):
     if current_user.role != UserRole.TEACHER:
@@ -80,12 +82,15 @@ def get_courses(db, page, limit, search, min_price, max_price, teacher_id, sort)
 
     total = query.count()
 
+    total_pages = math.ceil(total / limit)
+
     skip = (page - 1) * limit
 
     courses = query.offset(skip).limit(limit).all()
 
     result = {
         "total": total,
+        "total_pages": total_pages,
         "page": page,
         "limit": limit,
         "courses": [

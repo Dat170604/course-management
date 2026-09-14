@@ -15,6 +15,35 @@
     </header>
 
     <main>
+        <h2>Statistics</h2>
+        <div class="stats">
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <p id="total-users">0</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Teachers</h3>
+                <p id="total-teachers">0</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Students</h3>
+                <p id="total-students">0</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Total Courses</h3>
+                <p id="total-courses">0</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Total Enrollments</h3>
+                <p id="total-enrollments">0</p>
+            </div>
+
+        </div>
+
         <h2>Student</h2>
         <div id="student-list">
             <div class="user-header">
@@ -36,8 +65,44 @@
         </div>
 
         <h2>Course</h2>
-        <div id="course-list">
+        <div class="course-filter">
 
+            <input
+                type="text"
+                id="search-input"
+                placeholder="Search courses..."
+            >
+
+            <input
+                type="number"
+                id="min-price"
+                placeholder="Min price"
+            >
+
+            <input
+                type="number"
+                id="max-price"
+                placeholder="Max price"
+            >
+
+            <select id="sort-price">
+                <option value="">Sort by price</option>
+                <option value="price">Price: Low to High</option>
+                <option value="-price">Price: High to Low</option>
+            </select>
+
+            <button id="search-button">
+                Search
+            </button>
+
+        </div>
+
+        <div id="course-list"></div>
+        
+        <div class="pagination">
+            <button id="prev-button">Previous</button>
+            <span id="page-info"></span>
+            <button id="next-button">Next</button>
         </div>
 
         <p id="message"></p>

@@ -8,7 +8,7 @@ from app.schemas.dashboard import (
     AdminGetCourseResponse,
     AdminGetUserResponse,
 )
-from app.services.dashboard_service import get_admin_dashboard, get_course, get_user
+from app.services.dashboard_service import get_admin_dashboard, get_course, get_user, delete_user
 
 router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
 
@@ -27,8 +27,10 @@ def admin_users(
     return get_user(current_user, db)
 
 
-@router.get("/admin/courses", response_model=AdminGetCourseResponse)
-def admin_courses(
-    current_user: User = Depends(require_admin), db: Session = Depends(get_db)
+@router.delete("/admin/users/{user_id}")
+def admin_delete_user(
+    user_id: int,
+    current_user: User = Depends(require_admin),
+    db: Session = Depends(get_db)
 ):
-    return get_course(current_user, db)
+    return delete_user(user_id, current_user, db)
