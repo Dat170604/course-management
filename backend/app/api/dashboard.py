@@ -5,10 +5,13 @@ from app.dependencies import get_db, require_admin
 from app.models.user import User
 from app.schemas.dashboard import (
     AdminDashboardResponse,
-    AdminGetCourseResponse,
     AdminGetUserResponse,
 )
-from app.services.dashboard_service import get_admin_dashboard, get_course, get_user, delete_user
+from app.services.dashboard_service import (
+    delete_user,
+    get_admin_dashboard,
+    get_user,
+)
 
 router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
 
@@ -31,6 +34,6 @@ def admin_users(
 def admin_delete_user(
     user_id: int,
     current_user: User = Depends(require_admin),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     return delete_user(user_id, current_user, db)

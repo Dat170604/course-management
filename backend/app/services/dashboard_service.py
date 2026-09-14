@@ -1,10 +1,10 @@
 from fastapi import HTTPException
 
+from app.exception.user import UserNotFoundException
 from app.models.course import Course
 from app.models.enrollment import Enrollment
 from app.models.enums import UserRole
 from app.models.user import User
-from app.exception.user import UserNotFoundException               
 
 
 def get_admin_dashboard(current_user, db):
@@ -33,14 +33,12 @@ def get_user(current_user, db):
 
     return {"students": students, "teachers": teachers}
 
+
 def delete_user(user_id, current_user, db):
     user = db.query(User).filter(User.id == user_id).first()
 
     if user.id == current_user.id:
-        raise HTTPException(
-            status_code=400,
-            detail="You cannot delete yourself"
-        )
+        raise HTTPException(status_code=400, detail="You cannot delete yourself")
 
     if not user:
         raise UserNotFoundException()
@@ -48,6 +46,4 @@ def delete_user(user_id, current_user, db):
     db.delete(user)
     db.commit()
 
-    return {
-        "message": "Deleted user successfully"
-    }
+    return {"message": "Deleted user successfully"}

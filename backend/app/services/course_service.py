@@ -1,4 +1,5 @@
 import json
+import math
 
 from fastapi import HTTPException
 from sqlalchemy import func
@@ -10,8 +11,6 @@ from app.models.enrollment import Enrollment
 from app.models.enums import UserRole
 from app.redis import redis_client
 from app.schemas.course import CourseResponse
-
-import math
 
 
 def create_course(course, current_user, db):
