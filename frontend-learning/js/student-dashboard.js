@@ -1,3 +1,8 @@
+import { enrollCourse, unenrollCourse, MyEnrollments } from "./enrollment.js";
+import { Logout, handleResponse } from "./api.js";
+import { getCourses } from "./course.js"
+
+
 const courseList = document.querySelector("#course-list");
 const message = document.querySelector("#message");
 const logout = document.querySelector("#logout");
@@ -6,12 +11,13 @@ const my_courses = document.querySelector("#my-courses")
 logout.addEventListener("click", Logout)
 
 async function getMyEnrollments() {
-    const response = await apiFetch("/enrollments/me");
-    const data = await response.json();
+    const response = await MyEnrollments()
 
-    if (!response.ok) {
-        return [];
-    }
+    const data = await handleResponse(response);
+
+    if (data === null) {
+            return;
+        }
 
     return data;
 }
@@ -19,17 +25,11 @@ async function getMyEnrollments() {
 async function loadCourses() {
     message.textContent = "";
     try {
-        const response = await apiFetch("/courses?page=1&limit=10");
+        const response = await getCourses();
 
-        const data = await response.json();
+        const data = await handleResponse(response);
 
-        if (!response.ok) {
-            if (response.status === 401) {
-                logout();
-                return;
-            }
-
-            message.textContent = getErrorMessage(data);
+        if (data === null) {
             return;
         }
 
@@ -82,23 +82,13 @@ function addEnrollEvents() {
     });
 }
 
-async function enrollCourse(courseId, button) {
+async function enrollCourses(courseId, button) {
     try {
-        const response = await apiFetch(`/enrollments/${courseId}`,
-            {
-                method: "POST"
-            }
-        );
+        const response = await enrollCourse(courseId)
 
-        const data = await response.json();
+        const data = await handleResponse(response)
 
-        if (!response.ok) {
-            if (response.status === 401) {
-                logout();
-                return;
-            }
-
-            message.textContent = getErrorMessage(data);
+        if (data === null) {
             return;
         }
 
@@ -117,12 +107,11 @@ async function enrollCourse(courseId, button) {
 
 async function loadMyCourses() {
     try {
-        const response = await apiFetch("/enrollments/me");
+        const response = await MyEnrollments();
 
-        const data = await response.json();
+        const data = await handleResponse(response)
 
-        if (!response.ok) {
-            message.textContent = getErrorMessage(data);
+        if (data === null) {
             return;
         }
 
@@ -169,31 +158,21 @@ async function addUnerollCourseEvent() {
         buttons.forEach(button => {
             button.addEventListener("click", () => {
                 const courseId = Number(button.dataset.id);
-                unenrollCourse(courseId, button);
+                unenrollCourses(courseId, button);
         });
     });
 }
 
-async function unenrollCourse(courseId, button) {
+async function unenrollCourses(courseId, button) {
     try {
         button.disabled = true;
         button.textContent = "Removing...";
 
-        const response = await apiFetch(
-            `/enrollments/${courseId}`,
-            {
-                method: "DELETE"
-            }
-        );
+        const response = await unenrollCourse(courseId)
 
-        const data = await response.json();
+        const data = await handleResponse(response)
 
-        if (!response.ok) {
-            message.textContent = getErrorMessage(data);
-
-            button.disabled = false;
-            button.textContent = "Unenroll";
-
+        if (data === null) {
             return;
         }
 

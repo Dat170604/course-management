@@ -129,6 +129,14 @@ button:active {
     transform: translateY(-5px);
 }
 
+#loading,
+#empty-message,
+#message {
+    text-align: center;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
 .pagination {
     display: flex;
     justify-content: center;

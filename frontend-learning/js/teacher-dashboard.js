@@ -1,3 +1,8 @@
+import { Logout, handleResponse } from "./api.js";
+import { getTeacherCourse, deleteCourse } from "./course.js"
+
+
+
 const courseList = document.querySelector("#course-list")
 const create_course = document.querySelector("#create-course")
 const message = document.querySelector("#message")
@@ -6,11 +11,11 @@ logout.addEventListener("click", Logout)
 
 async function loadTeacherCourses() {
     try{
-        const response = await apiFetch("/courses/dashboard");
-        const data = await response.json();
+        const response = await getTeacherCourse();
 
-        if (!response.ok) {
-            courseList.textContent = getErrorMessage(data);
+        const data = await handleResponse(response);
+
+        if (data === null) {
             return;
         }
 
@@ -52,29 +57,18 @@ async function addDeleteCourseEvent() {
         delete_btn.forEach(button => {
             button.addEventListener("click", () => {
                 const courseId = Number(button.dataset.id);
-                deleteCourse(courseId);
+                deleteCourses(courseId);
         })
     })
 }
 
-async function deleteCourse(courseId) {
+async function deleteCourses(courseId) {
     try {
-        const response = await apiFetch(`/courses/${courseId}`,
-            {
-                method: "DELETE"
-            }
-        );  
+        const response = await deleteCourse(courseId)
 
-        const data = await response.json();
+        const data = await handleResponse(response)
 
-        if(!response.ok) {
-
-            if (response.status === 401) {
-                logout();
-                return;
-            }
-
-            message.textContent = getErrorMessage(data);
+        if (data === null) {
             return;
         }
 

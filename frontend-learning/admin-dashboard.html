@@ -97,7 +97,17 @@
 
         </div>
 
-        <div id="course-list"></div>
+        <p id="loading" hidden>
+            Loading courses...
+        </p>
+
+        <div id="course-list">
+
+        </div>
+
+        <p id="empty-message" hidden>
+            No courses found.
+        </p>
         
         <div class="pagination">
             <button id="prev-button">Previous</button>
@@ -108,7 +118,6 @@
         <p id="message"></p>
     </main>
 
-    <script src="js/api.js"></script>
-    <script src="js/admin-dashboard.js"></script>
+    <script type="module" src="js/admin-dashboard.js"></script>
 </body>
 </html>

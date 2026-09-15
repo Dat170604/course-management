@@ -50,7 +50,10 @@ async function LoginUser() {
         );
 
         success.textContent = "Login successful!";
-
+        setTimeout(() => {
+            window.location.href = "index.html"
+        }, 1000);
+        
     }   catch (err) {
         error.textContent ="Cannot connect to server";
     }   finally {
@@ -62,7 +65,6 @@ async function LoginUser() {
 form.addEventListener("submit", async event => {
     event.preventDefault();
     await LoginUser();
-    window.location.href = "index.html"
 });
 
 

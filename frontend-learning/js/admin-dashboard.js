@@ -1,3 +1,9 @@
+import { requireRole } from "./auth.js";
+import { apiFetch, Logout, handleResponse } from "./api.js";
+import { adminDashboard, getUsers, deleteUser, updateUserRole} from "./user.js"
+import { getCourses, deleteCourse } from "./course.js"
+
+
 const logout = document.querySelector("#logout")
 const message = document.querySelector("#message")
 
@@ -11,6 +17,10 @@ const students = document.querySelector("#student-list")
 const teachers = document.querySelector("#teacher-list")
 
 const courseList = document.querySelector("#course-list")
+
+const loading = document.querySelector("#loading");
+const emptyMessage = document.querySelector("#empty-message");
+
 const prevButton = document.querySelector("#prev-button");
 const nextButton = document.querySelector("#next-button");
 const pageInfo = document.querySelector("#page-info");
@@ -21,22 +31,32 @@ const maxPriceInput = document.querySelector("#max-price");
 const sortPrice = document.querySelector("#sort-price");
 const searchButton = document.querySelector("#search-button");
 
+async function init() {
+    const user = await requireRole("ADMIN");
+
+    if (!user) {
+        return;
+    }
+
+    console.log("Welcome", user.username);
+
+    loadStatistics();
+    loadUsers();
+    loadCourses();
+    
+}
+
+init();
+
 logout.addEventListener("click", Logout)
 
 async function loadStatistics() {
     try {
-        const response = await apiFetch("/dashboard/admin")
+        const response = await adminDashboard()
 
-        const data = await response.json()
+        const data = await handleResponse(response);
 
-        if (!response.ok) {
-
-            if (response.status === 401) {
-                logout();
-                return;
-            }
-
-            message.textContent =getErrorMessage(userData);
+        if (data === null) {
             return;
         }
 
@@ -52,17 +72,15 @@ async function loadStatistics() {
     }
 }
 
-loadStatistics();
 
-async function loadUser() {
+async function loadUsers() {
     message.textContent = ""
     try {
-        const response = await apiFetch("/dashboard/admin/users")
+        const response = await getUsers()
 
-        const data = await response.json()
+        const data = await handleResponse(response);
 
-        if (!response.ok) {
-            message.textContent = getErrorMessage(data);
+        if (data === null) {
             return;
         }
         
@@ -115,41 +133,30 @@ async function addDeleteUserEvent() {
         button.addEventListener("click", () => {
             const userId = Number(button.dataset.id);
 
-            deleteUser(userId);
+            deleteUsers(userId);
         });
     });
 }
 
-async function deleteUser(userId) {
+async function deleteUsers(userId) {
     try {
-        const response = await apiFetch(`/dashboard/admin/users/${userId}`,
-            {
-                method: DELETE
-            }
-        )
+        const response = await deleteUser(userId)
 
-        const data = await response.json();
+        const data = await handleResponse(response);
 
-        if (!response.ok) {
-            if (response.status === 401) {
-                logout();
-                return;
-            }
-
-            message.textContent = getErrorMessage(data)
-            return
+        if (data === null) {
+            return;
         }
 
         message.textContent = "Deleted User Succesfully"
 
-        await loadUser();
+        await loadUsers();
     } catch (error) {
         console.log(error);
         message.textContent = "Can't connect to server."
     }
 }
 
-loadUser();
 
 let currentPage = 1;
 const limit = 10;
@@ -160,39 +167,34 @@ let currentMinPrice = "";
 let currentMaxPrice = "";
 let currentSort = "";
 
-async function loadCourse(page=1) {
+async function loadCourses(page=1) {
+
+    loading.hidden = false;
+    emptyMessage.hidden = true;
+
+    courseList.innerHTML = ""
+
     try {
-        const params = new URLSearchParams();
+        
+        const response = await getCourses({
+            page: page,
+            limit: limit,
+            search: currentSearch,
+            minPrice: currentMinPrice,
+            maxPrice: currentMaxPrice,
+            sort: currentSort
+        });
 
-        params.append("page", page);
-        params.append("limit", limit);
+        const data = await handleResponse(response);
 
-        if (currentSearch) {
-            params.append("search", currentSearch);
-        }
-
-        if (currentMinPrice) {
-            params.append("min_price", currentMinPrice);
-        }
-
-        if (currentMaxPrice) {
-            params.append("max_price", currentMaxPrice);
-        }
-
-        if (currentSort) {
-            params.append("sort", currentSort);
-        }
-
-        const response = await apiFetch(`courses?${params.toString()}`)
-
-        const data = await response.json()
-
-        if (!response.ok) {
-            message.textContent = getErrorMessage(data);
+        if (data === null) {
             return;
         }
 
-        courseList.innerHTML = ""
+        if (data.courses.length === 0) {
+            emptyMessage.hidden = false;
+            return;
+        }
         
         data.courses.forEach(course => {
             const card = document.createElement("div");
@@ -224,10 +226,11 @@ async function loadCourse(page=1) {
     } catch (err) {
         console.log(err)
         message.textContent = "Cannot connect to server."
+    }   finally {
+        loading.hidden = true;
     }
 }
 
-loadCourse();
 
 prevButton.addEventListener("click", () => {
     if (currentPage > 1) {
@@ -241,45 +244,62 @@ nextButton.addEventListener("click", () => {
     }
 });
 
-searchButton.addEventListener("click", () => {
+function applyFilters() {
     currentSearch = searchInput.value.trim();
     currentMinPrice = minPriceInput.value;
     currentMaxPrice = maxPriceInput.value;
     currentSort = sortPrice.value;
     currentPage = 1;
     loadCourses(currentPage);
+}
+
+searchButton.addEventListener("click", applyFilters);
+
+let searchTimer;
+
+function handleFilterChange() {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+        applyFilters();
+    }, 500);
+}
+
+searchInput.addEventListener("input", handleFilterChange);
+minPriceInput.addEventListener("input", handleFilterChange);
+maxPriceInput.addEventListener("input", handleFilterChange);
+sortPrice.addEventListener("change", handleFilterChange);
+
+searchInput.addEventListener("input", () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+        currentSearch = searchInput.value.trim();
+        currentPage = 1;
+        loadCourses(currentPage);
+    }, 500);
 });
 
+
 async function addDeleteCourseEvent() {
-    const buttons = document.querySelector("#delete-course")
+    const buttons = document.querySelectorAll("#delete-course")
 
     buttons.forEach(button => {
         button.addEventListener("click", () => {
             const courseId = Number(button.dataset.id)
         
-            deleteCourse(courseId)
+            deleteCourses(courseId)
         })  
     })
 }
 
-async function deleteCourse(courseId) {
+
+async function deleteCourses(courseId) {
     try {
-        const response = await apiFetch(`/courses/${courseId}`,
-            {
-                method: DELETE
-            }
-        )
+        const response = await deleteCourse(courseId)
 
-        const data = await response.json();
+        const data = await handleResponse(response);
 
-        if (!response.ok) {
-            if (response.status === 401) {
-                logout();
-                return;
-            }
-
-            message.textContent = getErrorMessage(data)
-            return
+        if (data === null) {
+            return;
         }
 
         message.textContent = "Deleted Course Succesfully"

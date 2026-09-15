@@ -41,3 +41,7 @@ class TeacherCreate(BaseModel):
     username: str
     email: EmailStr
     password: str
+
+
+class UpdateRoleRequest(BaseModel):
+    role: UserRole

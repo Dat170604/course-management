@@ -1,6 +1,6 @@
 const API_URL = "http://localhost:8000";
 
-async function apiFetch(url, options = {}) {
+export async function apiFetch(url, options = {}) {
 
     const token = localStorage.getItem("access_token");
 
@@ -62,7 +62,7 @@ async function apiFetch(url, options = {}) {
     return response;
 }
 
-function getErrorMessage(data) {
+export function getErrorMessage(data) {
     if (Array.isArray(data.detail)) {
         return data.detail
             .map(error => error.msg)
@@ -71,7 +71,7 @@ function getErrorMessage(data) {
     return data.detail || "Something went wrong";
 }
 
-async function Logout() {
+export async function Logout() {
     try {
         const refreshToken = localStorage.getItem("refresh_token");
 
@@ -98,5 +98,17 @@ async function Logout() {
     }
 }
 
+export async function handleResponse(response) {
+    const data = await response.json();
 
+    if (!response.ok) {
+
+        if (response.status === 401) {
+            logout();
+            return null;
+        }
+        throw new Error(getErrorMessage(data));
+    }
+    return data;
+}
 
