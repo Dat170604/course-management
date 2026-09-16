@@ -24,12 +24,12 @@ export async function getCourses({
 
 
 export async function getCourse(courseId) {
-    return await apiFetch(`/course/${courseId}`);
+    return await apiFetch(`/courses/${courseId}`);
 }
 
 
 export async function createCourse(courseData) {
-    return await apiFetch("/course", {
+    return await apiFetch("/courses", {
         method: "POST",
         body: JSON.stringify(courseData)
     });
@@ -37,7 +37,7 @@ export async function createCourse(courseData) {
 
 
 export async function updateCourse(courseId, courseData) {
-    return await apiFetch(`/course/${courseId}`, {
+    return await apiFetch(`/courses/${courseId}`, {
         method: "PUT",
         body: JSON.stringify(courseData)
     });
@@ -45,12 +45,12 @@ export async function updateCourse(courseId, courseData) {
 
 
 export async function deleteCourse(courseId) {
-    return await apiFetch(`/course/${courseId}`, {
+    return await apiFetch(`/courses/${courseId}`, {
         method: "DELETE"
     });
 }
 
 
 export async function getTeacherCourse() {
-    return await apiFetch(`/course/dashboard`);
+    return await apiFetch(`/courses/dashboard`);
 }

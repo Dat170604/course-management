@@ -21,7 +21,40 @@
 
         <p id="message"></p>
     </main>
+
+    <div id="edit-modal" class="modal" hidden>
+        <div class="modal-content">
+            <button id="close-modal">X</button>
+            <h2>Edit Course</h2>
+            <form id="edit-course-form">
+                <label>Title</label>
+
+                <input
+                    id="edit-title"
+                    type="text"
+                    required
+                >
+
+                <label>Description</label>
+
+                <textarea
+                    id="edit-description"
+                    required
+                ></textarea>
+
+                <label>Price</label>
+
+                <input
+                    id="edit-price"
+                    type="number"
+                    required
+                >
+
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
     
-    <script src="js/teacher-dashboard.js"></script>
+    <script type="module" src="js/teacher-dashboard.js"></script>
 </body>
 </html>

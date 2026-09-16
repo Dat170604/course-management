@@ -1,3 +1,6 @@
+import { apiFetch, handleResponse } from "./api.js";
+
+
 const form = document.querySelector(".register-form");
 
 const username = document.querySelector("#username");
@@ -26,7 +29,7 @@ async function registerUser() {
 
     try {
 
-        const response = await fetch("/auth/register",
+        const response = await apiFetch("/auth/register",
             {
                 method: "POST",
                 body: JSON.stringify({
@@ -37,10 +40,9 @@ async function registerUser() {
             }
         );
 
-        const data = await response.json();
+        const data = await handleResponse(response);
 
-        if (!response.ok) {
-            error.textContent = getErrorMessage(data);
+        if (data === null) {
             return;
         }
 

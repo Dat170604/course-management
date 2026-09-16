@@ -81,8 +81,50 @@ button:active {
     transform: scale(0.95);
 }
 
-#delete-course {
+.delete-course-button {
     position:absolute;
-    right: 10px;
-    bottom: 10px;
+    right: 0px;
+    top: 0px;
+}
+
+.view-button {
+    position:absolute;
+    right: 0px;
+    bottom: 0px;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.5);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal[hidden] {
+    display: none;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    position: relative;
+}
+
+#edit-course-form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+}
+
+#close-modal {
+    position:absolute;
+    top: 0;
+    right: 0;
 }

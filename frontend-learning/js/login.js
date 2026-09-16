@@ -1,3 +1,6 @@
+import { apiFetch, handleResponse } from "./api.js";
+
+
 const form = document.querySelector(".login-form");
 
 const login = document.querySelector("#login-btn")
@@ -30,10 +33,9 @@ async function LoginUser() {
             },
         );
 
-        const data = await response.json();
+        const data = await handleResponse(response);
 
-        if (!response.ok) {
-            error.textContent = getErrorMessage(data);
+        if (data === null) {
             return;
         }
 

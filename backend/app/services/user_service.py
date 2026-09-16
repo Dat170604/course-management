@@ -28,9 +28,9 @@ def create_teacher(teacher_data, db):
 
 def get_user(current_user, db):
 
-    students = db.query(User).filter(User.role == UserRole.STUDENT)
+    students = db.query(User).filter(User.role == UserRole.STUDENT).all()
 
-    teachers = db.query(User).filter(User.role == UserRole.TEACHER)
+    teachers = db.query(User).filter(User.role == UserRole.TEACHER).all()
 
     return {"students": students, "teachers": teachers}
 

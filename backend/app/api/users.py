@@ -3,7 +3,12 @@ from sqlalchemy.orm import Session
 
 from app.dependencies import get_db, require_admin
 from app.models.user import User
-from app.schemas.user import TeacherCreate, UpdateRoleRequest, UserResponse
+from app.schemas.user import (
+    AdminGetUserResponse,
+    TeacherCreate,
+    UpdateRoleRequest,
+    UserResponse,
+)
 from app.services.user_service import (
     create_teacher,
     delete_user,
@@ -14,7 +19,7 @@ from app.services.user_service import (
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
-@router.get("/", response_model=list[UserResponse])
+@router.get("/", response_model=list[AdminGetUserResponse])
 def get_users(
     current_user: User = Depends(require_admin), db: Session = Depends(get_db)
 ):
@@ -33,11 +38,11 @@ def delete_users(
 @router.put("/{user_id}/role")
 def upgrade_roles(
     user_id: int,
-    role: UpdateRoleRequest,
+    data: UpdateRoleRequest,
     current_user: User = Depends(require_admin),
     db: Session = Depends(get_db),
 ):
-    return upgrade_role(user_id, role, current_user, db)
+    return upgrade_role(user_id, data.role, current_user, db)
 
 
 @router.post("/teachers", response_model=UserResponse)

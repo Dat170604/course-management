@@ -85,7 +85,7 @@ button:active {
     font-weight: bold;
 }
 
-.user-header, .user-card {
+.user-header, .user-row {
     display: grid;
     grid-template-columns: 60px 1fr 2fr 1fr;
     align-items: center;
@@ -102,7 +102,7 @@ button:active {
     font-weight: bold;
 }
 
-#delete-user {
+.delete-user-button {
     position: absolute;
     top: 0;
     right: 0;
@@ -172,9 +172,17 @@ button:active {
     padding: 8px;
 }
 
-#delete-course {
+.view-button {
     position: absolute;
     right: 0px;
     bottom: 0px;
 }
+
+.delete-course {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+
+
 

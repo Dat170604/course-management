@@ -1,7 +1,8 @@
 import { requireRole } from "./auth.js";
-import { apiFetch, Logout, handleResponse } from "./api.js";
+import { Logout, handleResponse } from "./api.js";
 import { adminDashboard, getUsers, deleteUser, updateUserRole} from "./user.js"
 import { getCourses, deleteCourse } from "./course.js"
+import { renderCourses, renderUsers} from "./component.js"
 
 
 const logout = document.querySelector("#logout")
@@ -83,40 +84,10 @@ async function loadUsers() {
         if (data === null) {
             return;
         }
-        
-        data.students.forEach((user, index) => {
-            const card = document.createElement("div");
-            card.classList.add("user-card");
-            card.innerHTML = `
-            <p>${index + 1}</p>
-            <p>${user.username}</p>
-            <p>${user.email}</p>
-            <p>${user.role}
-            <button 
-            id="delete-user"
-            data-id="${user.id}">
-            Delete</button>
-            `;
 
-            students.appendChild(card)
-        })
+        renderUsers(students, data.students)
 
-        data.teachers.forEach((user, index) => {
-            const card = document.createElement("div");
-            card.classList.add("user-card");
-            card.innerHTML = `
-            <p>${index + 1}</p>
-            <p>${user.username}</p>
-            <p>${user.email}</p>
-            <p>${user.role}
-            <button 
-            id="delete-user"
-            data-id="${user.id}">
-            Delete</button>
-            `;
-
-            teachers.appendChild(card)
-        })
+        renderUsers(teachers, data.teachers)
 
         addDeleteUserEvent();
 
@@ -172,8 +143,6 @@ async function loadCourses(page=1) {
     loading.hidden = false;
     emptyMessage.hidden = true;
 
-    courseList.innerHTML = ""
-
     try {
         
         const response = await getCourses({
@@ -195,22 +164,17 @@ async function loadCourses(page=1) {
             emptyMessage.hidden = false;
             return;
         }
-        
-        data.courses.forEach(course => {
-            const card = document.createElement("div");
-            card.classList.add("course-card");
-            card.innerHTML = `
-            <p>Title: ${course.title}</p>
-            <p>Description: ${course.description}</p>
-            <p>Price: ${course.price}</p>
-            <p>Teacher: ${course.teacher_id}</p>
-            <button 
-            id="delete-course"
-            data-id=${course.id}>
-            Delete</button>
-            `;
 
-            courseList.appendChild(card)
+        renderCourses(courseList, data.courses)
+
+        const courses_card = document.querySelectorAll(".course-card")
+
+        courses_card.forEach((card, index) => {
+            const button = document.createElement("button")
+            button.classList.add("delete-course")
+            button.textContent = "Delete"
+            button.dataset.id = data.courses[index].id;
+            card.appendChild(button)
         })
 
         currentPage = data.page;
@@ -304,7 +268,7 @@ async function deleteCourses(courseId) {
 
         message.textContent = "Deleted Course Succesfully"
 
-        await loadCourse();
+        await loadCourses();
     } catch (error) {
         console.log(error);
         message.textContent = "Can't connect to server."

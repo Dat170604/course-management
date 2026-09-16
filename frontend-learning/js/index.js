@@ -1,3 +1,5 @@
+import { apiFetch, handleResponse } from "./api.js";
+
 function showRole(role) {
     if (role === "STUDENT") {
         window.location.href = "student-dashboard.html"
@@ -13,10 +15,9 @@ async function loadUser() {
     try {
         const response = await apiFetch("/auth/me");
 
-        const data = await response.json()
+        const data = await handleResponse(response);
 
-        if (!response.ok) {
-            error.textContent = getErrorMessage(data);
+        if (data === null) {
             return;
         }
 
