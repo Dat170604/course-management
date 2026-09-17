@@ -218,6 +218,7 @@ def get_teacher_dashboard(current_user, db, page, limit, search):
                 "title": course.title,
                 "description": course.description,
                 "price": course.price,
+                "teacher_name": course.teacher.username,
                 "student_count": student_count,
             }
         )
