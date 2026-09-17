@@ -99,7 +99,7 @@ def get_courses(db, page, limit, search, min_price, max_price, teacher_id, sort)
                 "description": course.description,
                 "price": course.price,
                 "teacher_name": course.teacher.username,
-                "teacher_id": course.teacher_id,
+                "student_count": course.student_count,
             }
             for course in courses
         ],
