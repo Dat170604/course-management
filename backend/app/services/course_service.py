@@ -98,8 +98,7 @@ def get_courses(db, page, limit, search, min_price, max_price, teacher_id, sort)
                 "title": course.title,
                 "description": course.description,
                 "price": course.price,
-                "teacher_name": course.teacher.username,
-                "student_count": course.student_count,
+                "teacher_id": course.teacher_id,
             }
             for course in courses
         ],
@@ -128,7 +127,7 @@ def get_course_by_id(course_id, db):
         "title": course.title,
         "description": course.description,
         "price": course.price,
-        "teacher": course.teacher.username,
+        "teacher_id": course.teacher_id,
     }
 
     redis_client.set(cache_key, json.dumps(result), ex=300)

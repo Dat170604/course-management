@@ -166,13 +166,10 @@ async function loadCourses(page=1) {
         const courses_card = document.querySelectorAll(".course-card")
 
         courses_card.forEach((card) => {
-            const teacher_name = document.createElement("p")
-            teacher_name.textContent = `Teacher Name: ${card.teacher_name}`
-
             const teacher_id = document.createElement("p")
-            teacher_id.textContent = `Teacher ID: ${card.teacher_id}`
+            teacher_id.textContent = `Teacher Name: ${card.teacher_id}`
             
-            card.append(teacher_name, teacher_id)
+            card.appendChild(teacher_id)
         })
 
         currentPage = data.page;
