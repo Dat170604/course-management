@@ -12,6 +12,7 @@ class CourseResponse(BaseModel):
     title: str
     description: str
     price: float
+    teacher_name: str
     teacher_id: int
     model_config = ConfigDict(from_attributes=True)
 
@@ -32,6 +33,7 @@ class TeacherCourseResponse(BaseModel):
 
 class CourseListResponse(BaseModel):
     total: int
+    total_pages: int
     page: int
     limit: int
     courses: list[CourseResponse]

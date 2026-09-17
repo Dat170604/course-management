@@ -51,6 +51,17 @@ export async function deleteCourse(courseId) {
 }
 
 
-export async function getTeacherCourse() {
-    return await apiFetch(`/courses/dashboard`);
+export async function getTeacherCourse({
+    page = 1, 
+    limit = 10, 
+    search = "",
+} = {}) {
+
+    const params = new URLSearchParams();
+    params.append("page", page);
+    params.append("limit", limit);
+
+    if (search) {params.append("search", search)}
+    
+    return await apiFetch(`/courses/dashboard?${params.toString()}`);
 }

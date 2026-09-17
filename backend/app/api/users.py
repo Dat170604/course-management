@@ -19,7 +19,7 @@ from app.services.user_service import (
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
-@router.get("/", response_model=list[AdminGetUserResponse])
+@router.get("/", response_model=AdminGetUserResponse)
 def get_users(
     current_user: User = Depends(require_admin), db: Session = Depends(get_db)
 ):

@@ -57,9 +57,13 @@ def my_courses(
 
 @router.get("/dashboard", response_model=list[TeacherCourseResponse])
 def teacher_dashboard(
-    current_user: User = Depends(require_teacher), db: Session = Depends(get_db)
+    current_user: User = Depends(require_teacher),
+    db: Session = Depends(get_db),
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
+    search: str = Query(None),
 ):
-    return get_teacher_dashboard(current_user, db)
+    return get_teacher_dashboard(current_user, db, page, limit, search)
 
 
 @router.get("/{course_id}/students", response_model=list[UserResponse])

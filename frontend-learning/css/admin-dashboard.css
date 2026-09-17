@@ -178,10 +178,14 @@ button:active {
     bottom: 0px;
 }
 
-.delete-course {
+.delete-course-button {
     position: absolute;
     right: 0px;
     top: 0px;
+}
+
+.edit-course-button {
+    display: none
 }
 
 

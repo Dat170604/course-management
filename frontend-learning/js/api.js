@@ -12,6 +12,7 @@ export async function apiFetch(url, options = {}) {
                 }
             }
     let response = await fetch(`${API_URL}${url}`,options);
+
     if (response.status === 401) {
 
         const refreshToken = localStorage.getItem("refresh_token");
@@ -20,8 +21,7 @@ export async function apiFetch(url, options = {}) {
             return response;
         }
 
-        const refreshResponse = await fetch(
-            API_URL + "/auth/refresh",
+        const refreshResponse = await fetch(API_URL + "/auth/refresh",
             {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
@@ -104,7 +104,7 @@ export async function handleResponse(response) {
     if (!response.ok) {
 
         if (response.status === 401) {
-            logout();
+            Logout();
             return null;
         }
         throw new Error(getErrorMessage(data));

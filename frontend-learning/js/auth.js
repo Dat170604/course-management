@@ -31,9 +31,7 @@ export async function requireAuth() {
         return await getCurrentUser();
     } catch (error) {
         console.error(error);
-
         window.location.href = "login.html";
-
         return null;
     }
 }
@@ -46,7 +44,8 @@ export async function requireRole(role) {
     }
 
     if (user.role !== role) {
-        window.location.href = "index.html";
+        Logout();
+        window.location.href = "login.html";
         return null;
     }
 

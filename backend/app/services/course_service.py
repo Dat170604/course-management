@@ -1,5 +1,5 @@
 import json
-import math
+from math import ceil
 
 from fastapi import HTTPException
 from sqlalchemy import func
@@ -81,7 +81,7 @@ def get_courses(db, page, limit, search, min_price, max_price, teacher_id, sort)
 
     total = query.count()
 
-    total_pages = math.ceil(total / limit)
+    total_pages = ceil(total / limit)
 
     skip = (page - 1) * limit
 
@@ -98,6 +98,7 @@ def get_courses(db, page, limit, search, min_price, max_price, teacher_id, sort)
                 "title": course.title,
                 "description": course.description,
                 "price": course.price,
+                "teacher_name": course.teacher.username,
                 "teacher_id": course.teacher_id,
             }
             for course in courses
@@ -127,7 +128,7 @@ def get_course_by_id(course_id, db):
         "title": course.title,
         "description": course.description,
         "price": course.price,
-        "teacher_id": course.teacher_id,
+        "teacher": course.teacher.username,
     }
 
     redis_client.set(cache_key, json.dumps(result), ex=300)
@@ -165,6 +166,10 @@ def delete_course(course_id, current_user, db):
     if current_user.role != UserRole.ADMIN and course.teacher_id != current_user.id:
         raise HTTPException(status_code=403, detail="You cannot delete this course")
 
+    db.query(Enrollment).filter(Enrollment.course_id == course_id).delete(
+        synchronize_session=False
+    )
+
     db.delete(course)
     db.commit()
 
@@ -180,19 +185,29 @@ def get_my_courses(current_user, db):
     return courses
 
 
-def get_teacher_dashboard(current_user, db):
+def get_teacher_dashboard(current_user, db, page, limit, search):
     if current_user.role != UserRole.TEACHER:
         raise HTTPException(
             status_code=403, detail="Only teachers can access dashboard"
         )
 
-    courses = (
+    query = (
         db.query(Course, func.count(Enrollment.id).label("student_count"))
         .outerjoin(Enrollment, Enrollment.course_id == Course.id)
         .filter(Course.teacher_id == current_user.id)
         .group_by(Course.id)
-        .all()
     )
+
+    if search:
+        query = query.filter(Course.title.ilike(f"%{search}%"))
+
+    total = query.count()
+
+    total_pages = ceil(total / limit) if total > 0 else 0
+
+    offset = (page - 1) * limit
+
+    courses = query.offset(offset).limit(limit).all()
 
     result = []
 
@@ -206,4 +221,10 @@ def get_teacher_dashboard(current_user, db):
                 "student_count": student_count,
             }
         )
-    return result
+    return {
+        "courses": result,
+        "total": total,
+        "total_pages": total_pages,
+        "page": page,
+        "limit": limit,
+    }

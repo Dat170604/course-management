@@ -12,6 +12,18 @@ export function createCourseCard(course) {
             data-id="${course.id}">
             View
         </button>
+        
+        <button
+            class="edit-course-button"
+            data-id="${course.id}">
+            Edit
+        </button>
+
+        <button
+            class="delete-course-button"
+            data-id="${course.id}">
+            Delete
+        </button>
     `;
 
     return card;

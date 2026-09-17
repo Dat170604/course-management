@@ -35,7 +35,6 @@ class UserResponse(BaseModel):
 class AdminGetUserResponse(BaseModel):
     students: list[UserResponse]
     teachers: list[UserResponse]
-    model_config = ConfigDict(from_attributes=True)
 
 
 class LoginRequest(BaseModel):
