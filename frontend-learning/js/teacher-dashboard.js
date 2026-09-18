@@ -11,9 +11,10 @@ const create_course = document.querySelector("#create-course")
 const message = document.querySelector("#message")
 
 const prevButton = document.querySelector("#prev-page");
+const pageInfo = document.querySelector("#page-info");
 const nextButton = document.querySelector("#next-page");
 
-const searchButton = document.querySelector("#seach-button")
+const searchButton = document.querySelector("#search-button")
 const searchInput = document.querySelector("#search-input")
 
 
@@ -33,7 +34,7 @@ async function loadCourses() {
         const response = await getTeacherCourse({
             page: currentPage, 
             limit: limit, 
-            search:  searchInput.value.trim()
+            search: searchInput.value.trim()
         });
 
         const data = await handleResponse(response);
@@ -53,13 +54,13 @@ async function loadCourses() {
         prevButton.disabled = currentPage <= 1;
         nextButton.disabled = currentPage >= totalPages;
 
-        renderCourses(courseList, data)
+        renderCourses(courseList, data.courses)
         
         const courses_card = document.querySelectorAll(".course-card")
 
         courses_card.forEach((card, index) => {
             const total_student = document.createElement("p")
-            total_student.textContent = `Total student: ${data[index].student_count}`
+            total_student.textContent = `Total student: ${data.courses[index].student_count}`
             card.appendChild(total_student);
         })
 

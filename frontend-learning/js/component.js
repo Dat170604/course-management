@@ -64,7 +64,7 @@ export function renderCourses(container, courses) {
 
 
 export function renderUsers(container, users) {
-    container.innerHTML = "";
+    
 
     users.forEach((user, index) => {
         const card = createUserRow(user, index);

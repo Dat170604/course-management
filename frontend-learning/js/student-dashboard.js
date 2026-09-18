@@ -77,7 +77,7 @@ function addEnrollEvents() {
         button.addEventListener("click", () => {
             const courseId = Number(button.dataset.id);
 
-            enrollCourse(courseId, button);
+            enrollCourses(courseId, button);
         });
     });
 }
@@ -96,6 +96,10 @@ async function enrollCourses(courseId, button) {
         button.disabled = true;
         
         message.textContent = "Enrolled successfully!";
+
+        setTimeout(() => {
+            message.textContent = "";
+        },2000)
 
 
     } catch (error) {

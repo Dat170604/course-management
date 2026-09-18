@@ -8,7 +8,7 @@ from app.schemas.course import (
     CourseListResponse,
     CourseResponse,
     CourseUpdate,
-    TeacherCourseResponse,
+    TeacherDashboardResponse,
 )
 from app.schemas.user import UserResponse
 from app.services.course_service import (
@@ -55,7 +55,7 @@ def my_courses(
     return get_my_courses(current_user, db)
 
 
-@router.get("/dashboard", response_model=list[TeacherCourseResponse])
+@router.get("/dashboard", response_model=TeacherDashboardResponse)
 def teacher_dashboard(
     current_user: User = Depends(require_teacher),
     db: Session = Depends(get_db),

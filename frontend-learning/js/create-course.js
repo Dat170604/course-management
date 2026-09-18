@@ -1,3 +1,7 @@
+import { createCourse } from "./course.js"
+import { handleResponse } from "./api.js";
+
+
 const courseForm = document.querySelector(".course-form");
 
 const titleInput = document.querySelector("#title");
@@ -8,12 +12,12 @@ const message = document.querySelector("#message");
 
 const cancelButton = document.querySelector("#cancel-button");
 
-async function createCourse(event) {
+async function createCourses(event) {
 
     event.preventDefault();
 
-    const title = titleInput.value;
-    const description = descriptionInput.value;
+    const title = titleInput.value.trim();
+    const description = descriptionInput.value.trim();
     const price = Number(priceInput.value);
 
     if (!title || !description || price < 0) {
@@ -23,24 +27,18 @@ async function createCourse(event) {
 
     const courseData = {title, description, price}
     try {
-        const response = await apiFetch("/courses",
-            {
-                method: "POST",
-                body: JSON.stringify(courseData)
-            }
-        );
+        const response = await createCourse(courseData)
 
-        const data = await response.json();
+        const data = await handleResponse(response)
 
-        if (!response.ok) {
-            message.textContent = gerErrorMessage(data);
-            return
-        }    
+        if (data === null) {
+            return;
+        } 
 
         message.textContent = "Course created successfully!";
 
         setTimeout(() => {
-            window.location.href = "index.html";
+            window.location.href = "teacher-dashboard.html";
         }, 1000);
     } catch (err) {
         console.log(err);
@@ -48,7 +46,7 @@ async function createCourse(event) {
     }
 }
 
-courseForm.addEventListener("submit", createCourse)
+courseForm.addEventListener("submit", createCourses)
 
 cancelButton.addEventListener("click", () => {
 

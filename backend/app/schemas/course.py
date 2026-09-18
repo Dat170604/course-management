@@ -28,6 +28,15 @@ class TeacherCourseResponse(BaseModel):
     description: str
     price: float
     student_count: int
+    model_config = ConfigDict(from_attributes=True)
+
+
+class TeacherDashboardResponse(BaseModel):
+    total: int
+    total_pages: int
+    page: int
+    limit: int
+    courses: list[TeacherCourseResponse]
 
 
 class CourseListResponse(BaseModel):
