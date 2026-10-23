@@ -2,7 +2,7 @@ services:
 
   backend:
     image: dat170604/course-management:latest
-    #pull_policy: always
+    pull_policy: always
     container_name: course_backend
 
     env_file:
@@ -26,7 +26,7 @@ services:
   
   frontend:
     image: dat170604/course-management-frontend:latest
-    #pull_policy: always
+    pull_policy: always
     container_name: course_frontend
 
     ports:

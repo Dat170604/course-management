@@ -105,7 +105,12 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/course-management:${{ github.sha }}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/course-management:latest
-          
+
+      
+      - name: Set up Docker Buildx
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/setup-buildx-action@v3
+
       - name: Build and push Frontend
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v6
