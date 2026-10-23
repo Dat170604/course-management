@@ -12,13 +12,15 @@ from app.middleware.logging import logging_middleware
 
 app = FastAPI()
 
+app.middleware("http")(logging_middleware)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
         "http://localhost:5173",
+        "http://localhost",
         "http://localhost:4200",
-        "http://127.0.0.1:4200",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -31,7 +33,6 @@ app.include_router(courses.router)
 app.include_router(enrollments.router)
 app.include_router(dashboard.router)
 
-app.middleware("http")(logging_middleware)
 
 app.add_exception_handler(CourseNotFoundException, app_exception_handler)
 app.add_exception_handler(InvalidTokenException, app_exception_handler)
