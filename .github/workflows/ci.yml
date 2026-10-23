@@ -99,8 +99,20 @@ jobs:
           -t ${{ secrets.DOCKERHUB_USERNAME }}/course-management:${{ github.sha }} \
           -t ${{ secrets.DOCKERHUB_USERNAME }}/course-management:latest \
           ./backend 
+
       - name: Push Docker image
         if: github.ref == 'refs/heads/main'
         run: |
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/course-management:${{ github.sha }}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/course-management:latest
+          
+      - name: Build and push Frontend
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v6
+        with:
+          context: ./test_angular
+          file: ./test_angular/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/course-management-frontend:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/course-management-frontend:latest
