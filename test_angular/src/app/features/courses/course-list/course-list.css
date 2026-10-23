@@ -1,0 +1,169 @@
+
+:host {
+  display: block;
+}
+
+.courses-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.page-header h1 {
+  margin: 0 0 8px;
+  color: #0f172a;
+  font-size: 28px;
+}
+
+.page-header p {
+  margin: 0;
+  color: #64748b;
+}
+
+.refresh-btn {
+  padding: 10px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: white;
+  color: #334155;
+  cursor: pointer;
+}
+
+.refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.course-card {
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: white;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.course-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.09);
+}
+
+.course-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 110px;
+  background: #eff6ff;
+  font-size: 42px;
+}
+
+.course-content {
+  padding: 20px;
+}
+
+.course-content h2 {
+  margin: 0 0 12px;
+  color: #0f172a;
+  font-size: 19px;
+}
+
+.description {
+  min-height: 48px;
+  margin: 0 0 18px;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.course-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+  color: #475569;
+  font-size: 13px;
+}
+
+.course-info strong {
+  color: #2563eb;
+  font-size: 17px;
+}
+
+.detail-btn {
+  display: block;
+  padding: 11px;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.detail-btn:hover {
+  background: #1d4ed8;
+}
+
+.state-message,
+.error-message {
+  padding: 28px;
+  border-radius: 12px;
+  background: #f8fafc;
+  color: #475569;
+  text-align: center;
+}
+
+.error-message {
+  color: #b91c1c;
+  background: #fef2f2;
+}
+
+.error-message button {
+  display: block;
+  margin: 14px auto 0;
+  padding: 9px 14px;
+  border: 0;
+  border-radius: 7px;
+  background: #b91c1c;
+  color: white;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .course-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .courses-page {
+    padding: 24px 16px;
+  }
+
+  .page-header {
+    align-items: flex-start;
+  }
+
+  .page-header h1 {
+    font-size: 23px;
+  }
+
+  .course-grid {
+    grid-template-columns: 1fr;
+  }
+}

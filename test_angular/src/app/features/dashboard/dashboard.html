@@ -1,0 +1,66 @@
+
+<div class="dashboard-page">
+  <div class="welcome-section">
+    <div>
+      <h1>Welcome back, {{ user()?.username || 'User' }}!</h1>
+      <p>Chào mừng bạn đến với hệ thống quản lý khóa học.</p>
+    </div>
+
+    <span class="role-label">
+      {{ user()?.role || 'Loading...' }}
+    </span>
+  </div>
+
+  <div class="stats-grid">
+    <article class="stat-card">
+      <span class="stat-icon">📚</span>
+      <div>
+        <p>Khóa học</p>
+        <h2>Xem danh sách</h2>
+        <a routerLink="/courses">Khám phá khóa học →</a>
+      </div>
+    </article>
+
+    @if (user()?.role === 'STUDENT') {
+      <article class="stat-card">
+        <span class="stat-icon">📝</span>
+        <div>
+          <p>Khóa học của tôi</p>
+          <h2>Đăng ký học</h2>
+          <a routerLink="/my-enrollments">Xem khóa đã đăng ký →</a>
+        </div>
+      </article>
+    }
+
+    @if (user()?.role === 'TEACHER' || user()?.role === 'ADMIN') {
+      <article class="stat-card">
+        <span class="stat-icon">🎓</span>
+        <div>
+          <p>Quản lý khóa học</p>
+          <h2>Giảng dạy</h2>
+          <a routerLink="/my-courses">Xem khóa học của tôi →</a>
+        </div>
+      </article>
+
+      <article class="stat-card">
+        <span class="stat-icon">＋</span>
+        <div>
+          <p>Khóa học mới</p>
+          <h2>Tạo khóa học</h2>
+          <a routerLink="/courses/create">Tạo ngay →</a>
+        </div>
+      </article>
+    }
+
+    @if (user()?.role === 'ADMIN') {
+      <article class="stat-card">
+        <span class="stat-icon">👥</span>
+        <div>
+          <p>Quản trị</p>
+          <h2>Người dùng</h2>
+          <a routerLink="/admin/users">Quản lý người dùng →</a>
+        </div>
+      </article>
+    }
+  </div>
+</div>

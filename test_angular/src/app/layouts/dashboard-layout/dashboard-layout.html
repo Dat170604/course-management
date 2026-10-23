@@ -1,0 +1,76 @@
+
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-icon">C</span>
+      <span>Course Management</span>
+    </div>
+
+    <div class="user-info">
+      <div class="avatar">
+        {{ user()?.username?.charAt(0)?.toUpperCase() || 'U' }}
+      </div>
+
+      <div class="user-details">
+        <strong>{{ user()?.username || user()?.email || 'User' }}</strong>
+        <span>{{ user()?.role || 'Loading role...' }}</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a
+        routerLink="/dashboard"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <span>⌂</span> Dashboard
+      </a>
+
+      <a routerLink="/courses" routerLinkActive="active">
+        <span>▤</span> Courses
+      </a>
+
+      @if (hasRole('STUDENT')) {
+        <a routerLink="/my-enrollments" routerLinkActive="active">
+          <span>▣</span> My Enrollments
+        </a>
+      }
+
+      @if (hasRole('TEACHER', 'ADMIN')) {
+        <a routerLink="/my-courses" routerLinkActive="active">
+          <span>▤</span> My Courses
+        </a>
+
+        <a routerLink="/courses/create" routerLinkActive="active">
+          <span>＋</span> Create Course
+        </a>
+      }
+
+      @if (hasRole('ADMIN')) {
+        <div class="nav-section">ADMINISTRATION</div>
+
+        <a routerLink="/admin/users" routerLinkActive="active">
+          <span>♙</span> Manage Users
+        </a>
+      }
+    </nav>
+
+    <button class="logout-btn" type="button" (click)="logout()">
+      ↪ Đăng xuất
+    </button>
+  </aside>
+
+  <main class="main-area">
+    <header class="topbar">
+      <div>
+        <span class="breadcrumb">Course Management</span>
+      </div>
+
+      <span class="role-badge">{{ user()?.role || 'User' }}</span>
+    </header>
+
+    <section class="page-content">
+      <router-outlet />
+    </section>
+  </main>
+</div>

@@ -1,0 +1,68 @@
+
+<div class="courses-page">
+  <header class="page-header">
+    <div>
+      <h1>Danh sách khóa học</h1>
+      <p>Khám phá các khóa học hiện có trên hệ thống.</p>
+    </div>
+
+    <button
+      class="refresh-btn"
+      type="button"
+      (click)="loadCourses()"
+      [disabled]="loading()"
+    >
+      {{ loading() ? 'Đang tải...' : 'Tải lại' }}
+    </button>
+  </header>
+
+  @if (loading()) {
+    <div class="state-message">
+      Đang tải danh sách khóa học...
+    </div>
+  } @else if (errorMessage()) {
+    <div class="error-message">
+      {{ errorMessage() }}
+      <button type="button" (click)="loadCourses()">
+        Thử lại
+      </button>
+    </div>
+  } @else if (courses().length === 0) {
+    <div class="state-message">
+      Hiện chưa có khóa học nào.
+    </div>
+  } @else {
+    <div class="course-grid">
+      @for (course of courses(); track course.id) {
+        <article class="course-card">
+          <div class="course-icon">📚</div>
+
+          <div class="course-content">
+            <h2>{{ course.title }}</h2>
+
+            <p class="description">
+              {{ course.description || 'Chưa có mô tả khóa học.' }}
+            </p>
+
+            <div class="course-info">
+              <span>
+                Giảng viên: {{ course.teacher_id }}
+              </span>
+
+              <strong>
+                {{ formatPrice(course.price) }}
+              </strong>
+            </div>
+
+            <a
+              class="detail-btn"
+              [routerLink]="['/courses', course.id]"
+            >
+              Xem chi tiết
+            </a>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</div>

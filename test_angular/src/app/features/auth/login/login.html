@@ -1,0 +1,60 @@
+<div class="login-page">
+  <div class="login-card">
+    <div class="brand">
+      <div class="brand-icon">C</div>
+      <h1>Course Management</h1>
+      <p>Đăng nhập vào tài khoản của bạn</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+      <div class="form-group">
+        <label for="email">Email</label>
+
+        <input
+          id="email"
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          placeholder="you@example.com"
+          required
+          email
+          autocomplete="email"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mật khẩu</label>
+
+        <input
+          id="password"
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          placeholder="Nhập mật khẩu"
+          required
+          autocomplete="current-password"
+        />
+      </div>
+
+      @if (error()) {
+        <p class="error-message">{{ error() }}</p>
+      }
+
+      <button
+        type="submit"
+        [disabled]="loading() || loginForm.invalid"
+      >
+        @if (loading()) {
+          Đang đăng nhập...
+        } @else {
+          Đăng nhập
+        }
+      </button>
+    </form>
+
+    <p class="register-link">
+      Chưa có tài khoản?
+      <a routerLink="/register">Đăng ký</a>
+    </p>
+  </div>
+</div>
